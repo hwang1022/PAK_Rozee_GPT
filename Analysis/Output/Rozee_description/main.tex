@@ -1,0 +1,1105 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{tikz}
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=black]{hyperref}
+
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{left=1in,right=1in,top=1in,bottom=1in}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{afterpage}
+\bibliographystyle{apalike}
+
+\title{Rozee Data Description}
+\author{Yifei Wu}
+\date{June 2025}
+
+\begin{document}
+\onehalfspacing
+
+\maketitle
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\section{Introduction}
+
+This document offers a comprehensive overview of the \textbf{Rozee} dataset, a large-scale candidate and job platform dataset, by providing data summaries for all its constituent datasets. \href{https://www.dropbox.com/scl/fi/a8c79h7csk0re5o6zjvpi/CSV_Data_Dictionary.docx-1.pdf?rlkey=xkcg05qf0cbp1seowtj5gf5kx&st=x3364isp&dl=0}{Here} is the codebook, which explains the meaning of all variables across all datasets, allowing for a quick grasp of the entire data landscape.
+
+The entire dataset can broadly be divided into five main parts:
+\begin{itemize}
+    \item \textbf{Meta Dataset}
+    \item \textbf{Application Dataset}
+    \item \textbf{Job Dataset}
+    \item \textbf{Company Dataset}
+    \item \textbf{User (Candidate) Dataset}
+\end{itemize}
+
+\newpage 
+
+\section{Meta Dataset}
+This part of the data provides the mapping from the IDs of \textbf{country}, \textbf{city}, \textbf{area}, and \textbf{skill} to their respective names, enabling merging with the main datasets using their unique IDs.
+
+\begin{itemize}
+    \item \texttt{countries.csv}: \textbf{N=}225. \textbf{Unique identifier}: \texttt{COUNTRY\_ID}.
+    \item[] \textbf{Note}: This file maps country unique IDs to country names. It contains no geographical location information.
+
+    \item \texttt{cities.csv}: \textbf{N=}56,824. \textbf{Unique identifier}: \texttt{CITY\_ID}.
+    \item[] \textbf{Note}: This file maps city unique IDs to city names. It includes latitude and longitude information, but the missing data rate is extremely high: 96.4\% (54,824 out of 56,824 entries) are missing.
+
+    \item \texttt{areas.csv}: \textbf{N=}4,404. \textbf{Unique identifier}: \texttt{ID}.
+    \item[] \textbf{Note}: This file maps area unique IDs to area names. These areas appear to be exclusively within Pakistan and represent sub-administrative divisions (below the lowest official administrative level). It contains latitude and longitude information for areas with only a 0.2\% missing rate.
+
+    \item \texttt{skills.csv}: \textbf{N=}1,434,613. \textbf{Unique identifier}: \texttt{skill\_id}.
+    \item[] \textbf{Note}: This file maps skill unique IDs to skill names, referring to the skills required for job positions. The string variable \texttt{skill\_name} contains encoding issues (garbled characters, maybe due to non-English languages, most likely
+Urdu.), and instances where the same skill is assigned different unique IDs due to spelling errors, such as "Sales Methdology" \& "Sales Methodology."
+\end{itemize}
+
+
+
+
+
+\newpage
+
+\section{Application Dataset}
+This section of the data pertains to specific job applications. 
+
+\subsection{application\_adb.csv}
+
+This data file contains basic information about applications.
+
+
+\begin{itemize}
+    \item \textbf{N = }22,722,615
+    \item \textbf{Unique Identifier}: \texttt{cv\_log\_id}
+    \item \textbf{Other ID Information}: \texttt{user\_id} (1,389,173 users, 2,158 of them can't be merged with user data, corresponding to 25,730 applications (0.11\%).), 
+    
+    \texttt{jid} (327,466 jobs, 145,930 of them can't be merged with job data, corresponding to 9,340,958 applications (41.1\%). ), 
+    
+    \texttt{company\_id} (64,947 companies, only 2 of them can't be merged with company data, corresponding to 18 applications.)
+
+So, we infer that the \textbf{job data might be incomplete} and needs verification with Rozee.
+    
+    The distribution of the number of applications corresponding to each job opening is shown in Table \ref{tab:appappnum}.
+    
+    \end{itemize}
+\input{Tables/application_appnum_sum}
+ \subsubsection*{Main Variables:}
+    \begin{enumerate}
+            \item \texttt{apply\_date}: Application submission date. Data ranges from January 1, 2020, to March 31, 2025, with its distribution shown in Figure \ref{fg:application_adb}.
+    \item \texttt{emp\_status}: Employer status for Application. Primarily categorized into four types: active (81.82\%), rejected (1.11\%), shortlisted (1.88\%), and viewed (15.15\%).  The specific meanings of these values and when this dynamic "status" was recorded need to be clarified with Rozee.
+    \item \texttt{test\_status  test\_code}: Test result or status. Some job postings include attached test questions as a part of application. More info in the descriptions of the job dataset (\texttt{jobs\_adb.csv}) and \texttt{test\_builder\_questions\_adb.csv}.
+    
+    \texttt{test\_status} is divided into four categories: Completed (2.75\%), CopyByEmployer (0.72\%), Pending (1\%), and NULL (95.53\%).
+    The specific meanings of these values and when this dynamic "status" was recorded need to be clarified with Rozee.
+
+    \texttt{test\_code} is an ID that can be merged with test questions and answers. It is 96.2\% missing, implying that most applications do not involve a testing phase. 
+
+    
+    \item \texttt{currentSalary}, \texttt{expectedSalary}: Current salary and salary expectations of the applicant. Most of them appear to be single, clean integer figures, such as 25000, 50000, 100000, etc. Descriptive statistics are provided in Table \ref{tab:application}.
+    Respectively 12.98\% and 6.25\% are missing.
+    
+    \end{enumerate}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/month_distribution_application.png}
+    \caption{Time Distribution of Job Applications (Application)}
+    \label{fg:application_adb}
+\end{figure}
+
+\input{Tables/application_sum}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+\section{Job Dataset}
+This section of the data pertains to specific job postings, encompassing basic job information, skills/questions/tests attached to jobs, and details regarding deleted jobs.  \textbf{However, we need to ask Rozee if this is complete data.}
+
+Fortunately, the missing issue in the job dataset is far less severe than in the company dataset. But we also need to know the \textbf{source} of the job dataset—whether it was scraped or obtained from an internal system—to help us understand  a series of issues.  More explanation can be found in the company dataset.
+
+
+
+\subsection{jobs\_adb.csv}
+This data file contains basic information about job postings. 
+
+\begin{itemize}
+    \item \textbf{N = }338,219. This sample size is so small and doesn't include many jids from the application data. This needs to be verified with Rozee.
+    \item \textbf{Unique Identifier}: \texttt{jid}
+    \item \textbf{Other ID Information}: 
+
+    
+    \texttt{country\_id} (102 unique countries. 0.18\% missing. 98.8\% of jobs are in Pakistan), 
+    
+    \texttt{city\_id} (8,771 unique cities. 0.73\% missing. Some jobs involve multiple cities or explicitly state "all cities," appearing to be system-defined options), 
+    
+    
+    \texttt{area\_id} (1,610 unique areas; 66.8\% missing. Some jobs involve multiple areas or explicitly state "all areas," appearing to be system-defined options), 
+    
+    
+    \texttt{company\_id} (65775 companies, only 1 of them can't merged with company data.)
+
+    \end{itemize}
+\subsubsection*{\textbf{Main Variables}:}
+    \begin{enumerate}
+        \item \texttt{title}, \texttt{job\_type\_id}, \texttt{job\_shift\_id}, \texttt{genderid}: Basic job details. There are 73,343 unique job titles. However, there are no files mapping the latter three IDs (strings) to specific names, making it difficult to ascertain their exact meanings for now.
+        \item \texttt{req\_experience}, \texttt{max\_experience}: Minimum and maximum work experience requirements. Both are inconsistently formatted, user-entered strings. The vast majority are year-based requirements, while some specify particular types of experience. 
+        
+        Many jobs only set a minimum and no maximum. For \texttt{max\_experience}, 69.36\% are missing.
+        
+        For \texttt{req\_experience}, 1.94\% are missing, and an additional 0.02\% have no experience requirement specified. Some common requirements include: Fresh (15.98\%), Less than 1 Year (8.05\%), 1 Year (21.66\%), 2 Years (20.29\%), 3 Years (15.03\%), 4 Years (4.51\%), 5 Years (7.55\%), 6 Years (1.07\%), 7 Years (0.97\%), 8 Years (0.97\%).
+        \item \texttt{salary\_range\_from/to\_(hide)}, \texttt{currency\_unit}: Salary range and currency unit, presented as neatly formatted string numbers. The meaning of the `hide` suffix is unclear, but it appears to supplement missing values from the original variables. 
+        
+        After processing, salary data is 2.2\% missing, and 98.8\% of jobs are denominated in Pakistani currency. After converting to USD Descriptive statistics for the upper limit, lower limit, and mean of salary ranges for jobs denominated in Pakistani currency are provided in Table \ref{tab:companysalary}.
+
+        \input{Tables/job_salary_sum}
+
+        
+        \item \texttt{created}, \texttt{displaydate}, \texttt{applyby}: Job posting creation date, display date, and application deadline. For application deadlines, dates range from 2010 to April 15, 2025, with the yearly distribution shown in Figure \ref{fg:jobs}. Another variable, \texttt{deactivateafterapplyby}, indicates whether the job deactivates after the deadline, with 79.74\% of jobs showing 'Yes' and the rest 'No'.
+
+        The job postings before 2020 should ideally be deleted. This is partly to maintain consistency with the application data's time range and partly because this portion of the data lacks representativeness.
+        
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/year_distribution_jobs.png}
+    \caption{Time Distribution of Jobs (Jobs)}
+    \label{fg:jobs}
+\end{figure}
+
+
+        
+        \item \texttt{industry\_id}, \texttt{department\_id}: Industry category and department information. However, no files map these string IDs to specific names,  leading to my uncertainty about the specific meaning of the ”department“. \texttt{industry\_id} is 7.2\% missing, with 63 unique industries; \texttt{department\_id} is 2.7\% missing, with 65 unique departments.
+
+         We could categorize them using more universal classification rules, such as the \href{https://www.bls.gov/soc/#}{Standard Occupational Classification (SOC)} code or \href{https://www.onetonline.org/help/online/zones}{ONET Job Zones} (to distinguish between high-tier and low-tier jobs). We may need to leverage LLM here.
+
+
+        
+        \item \texttt{min\_education}, \texttt{max\_education\_id}: Seemingly IDs for education level requirements, but without specific descriptions. Missing 1.72\% and 99.9\& respectively: Most jobs do not specify a maximum education level. There appear to be a total of 28 education levels, without specific names. Frequency Statistics are shown in Table \ref{tab:jobs_freq4}.
+    
+\begin{table}[]
+\small
+    \centering
+        \caption{Frequency Statistics of Education Levels (Jobs)}
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/job_freq4.tex} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:jobs_freq4}
+\end{table}
+
+        
+        \item \texttt{totalpositions}: The number of positions for the job. 0.3\% missing. This appears to be a user-entered string variable with inconsistent formatting. After minor cleaning, descriptive statistics are provided in Table \ref{tab:company_position}. \footnote{Values displaying "35+" are counted as 35.}
+        
+\input{Tables/job_positionnum_sum}
+        
+        \item \texttt{careerlevelid}, \texttt{careerlevel}: The career level of the recruited position (literal meaning). 2.4\% missing. \texttt{careerlevel} is a user-entered string, with common categories including: Department Head (1.39\%), Entry Level (29.62\%), Experienced Professional (62.61\%), Intern/Student (3.86\%).
+        \item \texttt{min\_age}, \texttt{max\_age}: Minimum and maximum age requirements. 63\% missing. Descriptive statistics for the upper limit, lower limit, and mean of age requirements are provided in Table \ref{tab:company_age}.
+
+\input{Tables/job_age_sum}
+        
+        \item \texttt{jobpackage}, \texttt{isfeatured}, \texttt{istopjob}, \texttt{ispremiumjob}: Meanings currently unclear. The latter three are dummy variables. The statistics for the first variable do not align with those of the latter three. Frequency statistics are provided in Table \ref{tab:jobs_freq1}.
+        
+\begin{table}[]
+    \centering
+        \caption{Frequency Statistics 1 (Jobs)}
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/job_freq1.tex} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:jobs_freq1}
+\end{table}
+
+
+
+
+        
+        \item \texttt{applyjobquestion}: Indicates whether questions are attached by employers for specific job postings. Frequency statistics are provided in Table \ref{tab:jobs_freq1}. This can be merged using \texttt{jid} with \texttt{apply\_job\_quick\_questions\_adb.csv} and \texttt{apply\_job\_quick\_answers\_adb.csv} to obtain the content of specific job questions and user answers. After the merge, 18,848 out of 19,869 \texttt{applyJobQuestion} "Y" jobs successfully matched.
+
+
+        
+        \item \texttt{tb\_id}, \texttt{tb\_require}: Indicating whether an attached test is required to complete the application for that job posting. If yes, \texttt{tb\_id} is the corresponding test builder IDs. Similar to job questions, this can be merged with \texttt{test\_builder\_questions\_adb.csv} or \texttt{test\_builder\_answers\_adb.csv}  using the \texttt{tb\_id} to get the content of test questions and their answers. Yet over 99.9\% missing.
+
+
+
+        
+        \item \texttt{description}: Description of the job, evidently scraped from webpages, with very few missing values. \textbf{This can potentially be analyzed using Large Language Models (LLMs) for text analysis}, yielding a wealth of information such as: recruiter tone, strictness of recruitment, job benefits, various guarantees, and more.
+        \item \texttt{filter\_gender}, \texttt{filter\_experience}, \texttt{filter\_degree}, \texttt{filter\_age}, \texttt{filter\_city}: Meanings unknown. Seemingly indicate whether specific aspects are filtered. Frequency statistics are provided in Table \ref{tab:jobs_freq2}.
+        \item \texttt{isdeleted}, \texttt{deletedon}: Indicates whether jobs are deleted, along with the deletion date. Frequency statistics are presented in Table \ref{tab:jobs_freq2}.  For jobs marked "Y" the \texttt{deletedon} date is missing in only 0.22\% of entries.
+        
+        Curiously, some jobs marked 'N' (not deleted) also have a corresponding deletedon timestamp(about 7.31\%).
+
+
+We need to verify with Rozee: Can only employers delete job postings, or can the platform also delete them? Does "deleted" mean it's no longer visible on the platform's website and "not deleted" means it's still visible? Or what does "deleted" mean? What's the precise indicator for whether it is deleted—is it the presence of a deletion timestamp or an \texttt{isdeleted} variable?
+
+        
+    \end{enumerate}
+
+
+\begin{table}[]
+    \centering
+        \caption{Frequency Statistics 2 (Jobs)}
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/job_freq2} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:jobs_freq2}
+\end{table}
+
+\subsection{deleted\_jobs\_adb.csv}
+
+This data file is a subset of \texttt{jobs\_adb.csv}, containing deleted jobs and their corresponding deletion dates. However, it is a complete subset of \texttt{jobs\_adb.csv}: it contains only 11,057 unique jobs, while \texttt{jobs\_adb.csv} has 31,691 jobs where the \texttt{isdeleted} variable is 'Y' (as shown in Table \ref{tab:jobs_freq2}), and fully encompassing the former. Therefore, \textbf{this file can be disregarded.}
+
+
+
+
+
+
+
+\subsection{jobs\_skills\_adb.csv}
+This data file contains skills attached to 325,393 jobs (a subset of \texttt{jobs\_adb.csv}, checked by merge) and their importance. It can be merged with \texttt{jobs\_adb.csv} using \texttt{jid}, and with \texttt{skills.csv} from the meta data using \texttt{skill\_id} to obtain specific skill names.
+
+\begin{itemize}
+    \item \textbf{N = }1,385,491
+    \item \textbf{Unique Identifier}: \texttt{jid-skill\_id} (87,250 unique skills, a subset of \texttt{skills.csv} checked by merge.)
+\end{itemize}
+\subsubsection*{Main Variables:}
+    \begin{enumerate}
+        \item \texttt{skill\_id}: Skills required for jobs and their importance. Descriptive statistics for the number of skills attached to each job are presented in Table \ref{tab:jobskillnum} and Figure \ref{fig:skillnum}. The frequencies and percentages for the top 30 \footnote{I have removed the garbled skills. I suspect the gibberish is due to non-English languages, most likely Urdu. This needs to be confirmed with Rozee.} most frequent skills are shown in Table \ref{tab:jobs_t20skill}.
+
+Unfortunately, the current data lacks any indicators for classifying or stratifying these numerous skills. It appears that all categories and levels of skills are mixed together (for example, "Adobe Photoshop" and "Communication Skills" are clearly not on the same level). Based on the current website's form settings, skills are filled in by the company or user, which explains the inconsistent formatting and the inability to auto-categorize them. However, this needs further confirmation from Rozee. 
+
+If this is indeed the case, we'll need to rely on LLMs and leverage more universal skill classification standards, such as \href{https://www.onetonline.org/find/descriptor/browse/2.B}{ONET Cross-Functional Skills framework}.
+
+
+        
+        
+       \item  \texttt{skill\_importance} is a dummy variable indicating whether a specific skill is important. Frequency statistics are shown in Table \ref{tab:jobs_freq3}. The distribution of the mean skill importance calculated for each job is shown in Table \ref{tab:jobskillmean} and Figure \ref{fig:skillmean}.
+    \end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{table}[]
+    \caption{Top 30 Skills Attached to Jobs (Jobs)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+
+Skill ID & Skill Name & Freq.  & Percent \% \\
+\hline
+323 & Power Electronic Knowledge & 15187 & 1.09615 \\
+2815152 & End to End Sales & 12442 & 0.89802 \\
+5604 & HTML & 8694 & 0.6275 \\
+286 & MySQL & 8042 & 0.58044 \\
+2496912 & Sales & 7966 & 0.57496 \\
+1821504 & Record Keeping & 7253 & 0.5235 \\
+4002 & Executing Content & 7150 & 0.51606 \\
+404 & Jquery & 7003 & 0.50545 \\
+59532 & Communication Skills & 6852 & 0.49455 \\
+452 & Adobe Illustrator & 6487 & 0.46821 \\
+5159 & Laravel & 6363 & 0.45926 \\
+2072514 & MS Office & 6292 & 0.45414 \\
+11854 & Scale Management & 5763 & 0.41595 \\
+853052 & Coordination Skillss & 5710 & 0.41213 \\
+7924 & Adobe PhotoshopÂ & 5689 & 0.41061 \\
+99684 & Analytical Skills & 5572 & 0.40217 \\
+12360 & Telemarketing Skills & 4808 & 0.34702 \\
+2304 & Presentation Skills & 4715 & 0.34031 \\
+184242 & Oral Communication Skills & 4688 & 0.33836 \\
+302 & ASP.net & 4614 & 0.33302 \\
+8322 & Equipment Maintenance Coordination & 4588 & 0.33115 \\
+1799992 & CSS & 4541 & 0.32775 \\
+1915 & Sterilization Procedure & 4485 & 0.32371 \\
+13866 & Multitasking Skills & 4418 & 0.31888 \\
+2197748 & MS Excel & 4398 & 0.31743 \\
+742 & CSS3 & 4347 & 0.31375 \\
+307 & MOSFETs & 4294 & 0.30993 \\
+1443 & Relations Management Skills & 4084 & 0.29477 \\
+17420 & Business Development Strategies & 3942 & 0.28452 \\
+19982 & React JS & 3883 & 0.28026 \\
+\vspace{-0.4cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:jobs_t20skill}
+\end{table}
+
+
+
+
+
+
+
+
+
+\input{Tables/job_skillnum_sum}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/hist_skillnum_job.png}
+    \caption{Histogram of Jobs' Skill Number (Jobs)}
+    \label{fig:skillnum}
+\end{figure}
+
+\begin{table}[]
+    \caption{Frequency Statistics of Skill Importance (Jobs)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/job_freq3} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:jobs_freq3}
+\end{table}
+
+
+\input{Tables/job_skillmean_sum}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/hist_skillmean_job.png}
+    \caption{Histogram of Mean of Skill Importance (Jobs)}
+    \label{fig:skillmean}
+\end{figure}
+
+
+
+
+
+
+\subsection{apply\_job\_quick\_questions\_adb.csv}
+
+This data file contains questions attached by employers for specific job postings.
+
+\begin{itemize}
+    \item \textbf{N =} 47,676
+    \item \textbf{Unique Identifier}: \texttt{questionid}
+    \item \textbf{Other ID Information}: \texttt{jid} (job), with 18,859 unique jobs (a subset of \texttt{jobs\_adb.csv}). This file can be merged with \texttt{jobs\_adb.csv} via \texttt{jid} to obtain more information about the corresponding job postings. 
+
+    
+    \end{itemize}
+ \subsubsection*{Main Variables:}
+    \begin{enumerate}
+    
+        \item \texttt{question}: Text of the question. This variable includes a wide variety of questions, such as personal information (full name, family member names, home address, etc.), work experience, education details, skills, and more. When merged with the candidate answers data, it can serve as a valuable supplement to the user dataset.
+     \end{enumerate}
+
+
+
+\subsection{apply\_job\_quick\_answers\_adb.csv}
+This data file contains the quick job answers given by candidates (in the application).
+
+\begin{itemize}
+    \item \textbf{N =} 4,879,926 (excluding observations with \texttt{questionid}=0, which are considered meaningless missing values)
+    \item \textbf{Unique Identifier}: \texttt{userid-jobquestionid}. 18,564 jobs, 46,480 questions, 536,155 users (59,509 of them cannot be merged with user dataset, corresponding to 225,237 answers (4.61\%))
+    
+    
+    There are 8,009 instances of duplicate answers where the same candidate submitted multiple answers to the same question. Further inquiry with Rozee is required to understand why there are duplicate observations for joint \texttt{userid} and \texttt{jobquestionid}.
+
+    
+    \item \textbf{Other ID Information}: \texttt{jid} (job), similar to \texttt{apply\_job\_quick\_questions\_adb.csv}.
+    \end{itemize}
+
+    
+ \subsubsection*{Main Variables:}
+    \begin{enumerate}
+        
+        \item \texttt{jobAnswer}: Answer provided for each question by users. Although it is in string format, making information extraction challenging, it can still serve as a valuable supplement to the user dataset.
+ \end{enumerate}
+
+
+\subsection{test\_builder\_questions\_adb.csv}
+
+Similar to the quick questions data mentioned above, this data file contains test questions generated by employers. It can be merged with the job dataset (\texttt{jobs\_adb.csv}) using \texttt{tb\_id}. However, as described in the \texttt{jobs\_adb.csv} section, over 99\% of job postings do not have corresponding test questions, resulting in a small N here.
+
+\begin{itemize}
+    \item \textbf{N = }8,033
+    \item \textbf{Unique Identifier}: \texttt{q\_id}
+    \end{itemize}
+ \subsubsection*{Main Variables:}
+    \begin{enumerate}
+        \item \texttt{tb\_id}, \texttt{q\_id}: IDs for specific test questions within a specific test builder. In \texttt{jobs\_adb.csv}, the core data of the job dataset, a small portion of jobs include corresponding test builder IDs, allowing for merging with this data. Each test builder can correspond to multiple test questions.
+        \item \texttt{q\_description}: The content of the test question. Some are mathematical problems assessing cognitive abilities, some are fill-in-the-blank questions assessing language skills, or general knowledge questions; Some are not significantly different from regular quick questions, being merely informational survey questions.
+    \end{enumerate}
+
+
+
+
+
+
+\subsection{test\_builder\_answers\_adb.csv}
+Similar to the quick questions data, this file contains answers submitted by candidates (in the application) for the test questions. It should be merged with \texttt{application\_adb.csv} using \texttt{test\_code} to get the User ID.
+
+\begin{itemize}
+    \item \textbf{N = }34,345,509
+    \item \textbf{Unique Identifier}: \texttt{test\_code--q\_id}. However, about 6\% of observations appear to be duplicated where users submitted multiple answers to the same test question within the same application. Further inquiry with Rozee is required to understand why there are duplicate observations for joint \texttt{test\_code} and \texttt{q\_id}.
+    
+    \end{itemize}
+ \subsubsection*{Main Variables:}
+    \begin{enumerate}
+        \item \texttt{tb\_id}, \texttt{q\_id}, \texttt{test\_code}: \texttt{tb\_id} and \texttt{q\_id} are as described above, indicating the ID of a specific test question within a specific test builder. \texttt{test\_code} can be merged with \texttt{application\_adb.csv} to obtain more information about the \textbf{corresponding application} for that answer, such as \texttt{jid}, \texttt{userid}, etc.
+        \item \texttt{answer}: The user's answer to the specific test question.
+    \end{enumerate}
+
+
+
+
+\newpage
+\section{Company Dataset}
+\label{sec:company}
+This section of the data pertains to Companies/Employers who are posting jobs, including various information about the companies.
+
+\subsection{companies\_adb.csv}
+This data file contains detailed information about Companies/Employers who are posting jobs. 
+
+According to the Rozee company information submission \href{https://hiring.rozee.pk/companies/addcompany}{form}, some fields are mandatory, yet the data shows a significant number of missing values for these, usually in the form of "NULL" or empty \footnote{There are indeed other forms, such as "-".}. We need to clarify with Rozee their \textbf{data source}, as: 
+
+1. It appears to have been directly scraped from publicly available web information, as much of the data that should be uniformly formatted (selected from predefined options) is not. However, it also seems that not all variables in our data is displayed publicly on the website. So, \textbf{what is the source they scrape from? Does this source display all the variables present in the data? Why are there so many missing values for fields that should be mandatory? What is the difference between various types of missing ("NULL" or empty) ?}
+
+2. If accessed via the internal system, that's even stranger for mandatory fields to have many missing values, and that fields which should be uniformly formatted appear to be manually entered. We'd like to understand why this is the case (e.g., perhaps the form's rules changed at some point?). 
+
+Nonetheless, after checking, at least all information publicly displayed on the Rozee website is included in our data.
+
+
+
+\begin{itemize}
+    \item \textbf{N =} 102,460
+    \item \textbf{Unique Identifier}: \texttt{company\_id}
+    \item \textbf{Other ID Information}: \texttt{country\_id} (132 unique countries. Missing 3.3\%,  90.3\% of companies are in Pakistan), \texttt{city\_id} (1,052 unique cities. Missing 0.7\%,  ). % Note: The user seems to have swapped country_id and city_id descriptions here, but I'll transcribe as given.
+\end{itemize}
+
+\subsubsection*{\textbf{Main Variables}:}
+\begin{enumerate}
+    \item \texttt{company\_name}: Company name. Required field when creating company profile.
+
+    
+    \item \texttt{company\_detail}: Company overview or description, typically a brief introduction of a sentence or paragraph. Required field but missing values exceed 70\%, including entries displaying "NULL" and meaningless symbols \footnote{These are different types of missing values; The latter is simply due to companies entering meaningless placeholders, rather than indicating a lack of meaningful content uploaded. However, this doesn't apply to the variables below.}. Additionally, some descriptions are meaningless, containing only words like "firm" or "university," making them unsuitable for further analysis.
+
+    
+    \item \texttt{no\_of\_employee}: Size of the workforce (a string representing a range like 1001-1500, 1501-2000). Required field and selected from predefined options. But in the data, the format is inconsistent, largely due to the scraping issues. Main size ranges include: \textit{1-10} (45.05\%), \textit{11-50} (32.48\%), \textit{101-200 }(4.07\%), \textit{201-300 }(1.99\%), \textit{301-600} (1.68\%), \textit{601-1000 }(1.11\%), and \textit{more than 5000} (0.88\%). Missing in 1.7\% of entries. 
+
+    
+    \item \texttt{operating\_since}: Year of establishment. Optional field and selected from predefined options (1925-2025). Yet in data it's a string variable with highly inconsistent formatting,  with dates ranging from 1900-2025. Missing in 89\% of entries. Missing values are primarily categorized into "NULL," "-", and empty strings.
+
+
+
+    
+    \item \texttt{created}: Entry (to platform) creation timestamp, with consistent formatting. Seemingly generated by the system. Dates range from 2004 to March 31, 2025, with the yearly distribution shown in Figure \ref{fg:company_entry}.
+
+
+
+    
+    \item \texttt{industry\_id}: Industry category. Required field. But there is no corresponding file for industry names. There are 63 unique industries.
+
+    
+    \item \texttt{ppsp}: Product or Services providing, which can be understood as a more granular industry classification. Required field but missing in 63\% of entries, including entries displaying "NULL," "-", and empty strings. These are company-entered descriptions, such as "service," "Air tickets, immigration consultation," or "Women clothing.".
+
+
+    
+    \item \texttt{companyOwnType}: Type of ownership. Required field and selected from predefined 5 options. Missing in 63\% of entries including "NULL" and empty. Frequency Statistics are shown in Table \ref{tab:companyfreq1}.
+
+    
+    \item \texttt{contact\_name} / \texttt{contact\_designation}: Name and designation of the contact person. Required field. Missing in 3.5\% and 6.7\% of entries, respectively.
+
+    
+    \item \texttt{noOffices}: Number of offices operated. Required field and selected from predefined options(1-19 and 20+). Missing 66.15\%, and descriptive statistics after processing are provided in Table \ref{tab:company} and Figure \ref{fg:officenum}.\footnote{Note: "20+" is also considered as 20.}
+
+    
+    
+    \item \texttt{originCompany}: Country of origin for the company. Required field and selected from predefined options of country names. Missing in 75.7\% of entries, and in data some entries use country IDs while others use country names.
+
+
+    
+    \item \texttt{company\_status}: Current status of companies, tagged by the platform. Missing in 90\% of entries. Frequency Statistics are shown in Table \ref{tab:companyfreq1}. The
+specific meanings of these values and when this dynamic "status" was recorded need
+to be clarified with Rozee.
+
+    
+    \item \texttt{company\_address}: Company address. Required field. Missing in 7.8\% of entries. Some entries are just street names, others are untraceable, and many appear incomplete (e.g., truncated after a comma). 
+    
+\end{enumerate}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/hist_officenum_company.png}
+    \caption{Distribution of Office Number (Company)}
+    \label{fg:officenum}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/year_distribution_copanies_entry.png}
+    \caption{Time Distribution of Company Entries (Company)}
+    \label{fg:company_entry}
+\end{figure}
+
+\input{Tables/company_sum}
+
+\begin{table}[]
+    \caption{Frequency Statistics (Company)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/company_freq1} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:companyfreq1}
+\end{table}
+
+
+
+
+
+
+
+\newpage
+\section{User (Candidate) Dataset}
+
+This section of the data pertains to specific users, i.e., candidates applying for jobs, encompassing extensive information such as basic identity, education, past experience, and skills. With its rich ID information, this dataset can be extensively merged with other datasets.
+
+Similarly, we also need to know the source of the user dataset.
+
+\subsection{users\_adb.csv}
+This data file contains basic information about users.
+
+\begin{itemize}
+    \item \textbf{N = }2,780,742
+    \item \textbf{Unique Identifier}: \texttt{user\_id}
+    \item \textbf{Other ID Information}: \texttt{nationality\_id} (149 unique countries. 61.5\% missing. 38.22\% of users have a nationality of Pakistan), \texttt{country\_id} (202 unique countries. 5\% missing. 93.73\% of users are in Pakistan), \texttt{city\_id} (2,279 unique cities. 30\% missing), \texttt{area\_id} (2,875 unique areas; 74.55\% missing).
+\end{itemize}
+\subsubsection*{Main Variables:}
+    \begin{enumerate}
+        \item \texttt{firstname}, \texttt{lastname}, \texttt{fullname}: User's name.
+        \item \texttt{gender\_id}, \texttt{maritalstatus}, \texttt{dobirth}: User's gender ID, marital status, and date of birth. After simple processing, frequency statistics for gender and marital status are shown in Table \ref{tab:users_freq1}. The specific meaning corresponding to each ID is unclear. 
+        
+        A histogram of birth year distribution is shown in Figure \ref{fig:user_birth}, but many dates are clearly problematic (birth years before 1920 or after 2020), with 12.2\% missing.
+        
+\begin{table}[]
+    \caption{Frequency Statistics 1 (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq1} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq1}
+\end{table}
+
+\begin{figure}
+    \centering
+    \caption{Histogram of Birth Year (Users)}
+    \includegraphics[width=0.7\linewidth]{Figures/year_hist_userbirth.png}
+
+    \label{fig:user_birth}
+\end{figure}
+
+
+
+
+        
+        \item \texttt{profile\_access}: A dummy variable, with its frequency distribution shown in Table \ref{tab:jobs_freq1}, indicating whether the personal profile is public.
+
+        
+        \item \texttt{cursal}, \texttt{expsal}: Estimates of the user's current and expected salary, formatted as neat string numbers, with 44.14\% and 24.02\% missing respectively. This is set by the user at the profile creation and can be edited, with the latest modification time stored in \texttt{last\_modified}. Descriptive statistics are provided in Table \ref{tab:usersalary}.
+
+
+\input{Tables/user_salary_sum}
+
+
+        \item \texttt{created}, \texttt{last\_modified}: Profile creation time and last modification time. Creation dates range from May 24, 2004, to March 31, 2025, with the trend distribution shown in Figure \ref{fig:usercreation}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/year_distribution_user_creation.png}
+    \caption{Time Distribution of User Profile Creation (Users)}
+    \label{fig:usercreation}
+\end{figure}
+
+
+
+        \item \texttt{experience}: Description of work experience, an inconsistently formatted string. Most people filled in years, but there are some garbled characters. After simple processing, frequency statistics are shown in Table \ref{tab:users_freq2}. A possible reason for conflicting entries, like "36 Years" and "More than 35 Years," could be changes in the table's rules. This requires further clarification from Rozee.
+
+\begin{table}[]
+\footnotesize
+    \caption{Frequency Statistics of Work Experience (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq2} \\
+\vspace{-0.8cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq2}
+\end{table}
+
+
+        \item \texttt{industry\_id}, \texttt{department\_id}: Industry category and department information. However, no files map these string IDs to specific names. \texttt{industry\_id} is 66.42\% missing, with 141 unique industries; \texttt{department\_id} is 47.26\% missing, with 181 unique departments.
+        \item \texttt{careerlevel\_id}: User's career level ID. The same variable exists in \texttt{jobs\_adb.csv}, which also provides corresponding names for career level IDs, such as Department Head, Entry Level, Experienced Professional, Intern/Student, etc. The frequency distribution of \texttt{careerlevel\_id} is shown in Table \ref{tab:users_freq3}.
+    \end{enumerate}
+
+\begin{table}[]
+    \caption{Frequency Statistics of Career Level ID (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq3} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq3}
+\end{table}
+
+
+
+
+
+
+\subsection{user\_languages\_adb.csv}
+
+This data file contains the languages mastered by 1,160,437 users, along with their corresponding proficiency levels. (This is a subset of the main \texttt{users\_adb.csv} data, which includes 2,780,742 users.)
+
+\begin{itemize}
+    \item \textbf{N = }2,377,899
+    \item \textbf{Unique Identifier}: \texttt{user\_id-lang\_id}. However, there are a small number of duplicate joint values for \texttt{user\_id} and \texttt{lang\_id} (28,194, or 1.18\%) in the data. These have been de-duplicated, retaining the entry with the higher proficiency level for duplicates.
+    \end{itemize}
+\subsubsection*{\textbf{Main Variables}:}
+ 
+    \begin{enumerate}
+        \item \texttt{user\_id}, \texttt{lang\_id}: The user's ID and the ID of the language they master. However, the language IDs are not mapped to specific language names. Frequency statistics for language IDs are shown in Table \ref{tab:users_freq4}. Descriptive statistics for the number of languages mastered by each user are provided in Table \ref{tab:userlangnum}.
+
+
+
+        \item \texttt{lang\_level}: The proficiency level of the language. Frequency statistics are shown in Table \ref{tab:users_freq5}. The distribution of the mean proficiency level calculated for each user is shown in Figure \ref{fig:lanmean}.
+    \end{enumerate}
+
+\begin{table}[]
+\scriptsize
+    \caption{Frequency Statistics of Language ID (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.25cm}
+\\
+\input{Tables/user_freq4} \\
+\vspace{-0.5cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq4}
+\end{table}
+
+
+\input{Tables/user_langnum_sum}
+
+
+
+\begin{table}[]
+    \caption{Frequency Statistics of Language Proficiency Level (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq5} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq5}
+\end{table}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/hist_lanmean_user.png}
+    \caption{Histogram of Mean of Language Proficiency (User)}
+    \label{fig:lanmean}
+\end{figure}
+
+
+
+
+
+
+
+\subsection{user\_skills\_adb.csv}
+
+This data file contains the types of skills mastered by 1,274,637 users, along with their corresponding proficiency levels. (This is a subset of the main \texttt{users\_adb.csv} data, which includes 2,780,742 users.)
+
+\begin{itemize}
+    \item \textbf{N = }24,637,364
+    \item \textbf{Unique Identifier}: \texttt{user\_id--skill\_id} (538,598 unique skills, a subset of \texttt{skills.csv} checked by merge) 
+    \end{itemize}
+\subsubsection*{\textbf{Main Variables}:}
+    \begin{enumerate}
+        \item \texttt{user\_id}, \texttt{skill\_id}: The user's ID and the ID of the skills they master. \texttt{skill\_id} can be merged with \texttt{skills.csv} from the meta data to obtain specific skill names. Descriptive statistics for the number of skills mastered by each user are provided in Table \ref{tab:userskillnum}.  The frequencies and percentages for the top 30 \footnote{I have removed the garbled skills. I suspect the gibberish is due to non-English languages, most likely Urdu. This needs to be confirmed with Rozee.}  most frequent skills are shown in Table \ref{tab:users_t20skill}.
+
+Similarly, these skills are self-entered by users, which prevents automatic classification and hierarchy.
+
+        
+        \item \texttt{level}: The proficiency level of the skills, given as a string. Frequency statistics are shown in Table \ref{tab:users_freq6}. After destring, the distribution of the mean proficiency level calculated for each user is
+shown in Figure \ref{fig:usermeanskill}.
+
+    \end{enumerate}
+
+\input{Tables/user_skillnum_sum}
+
+
+
+\begin{table}[]
+    \caption{Top 30 Skills Attached to Users (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+
+Skill ID & Skill Name & Freq.  & Percent \% \\
+\hline
+1915 & Sterilization Procedure & 184551 & 0.74907 \\
+2901977 & Handling Assignments & 176211 & 0.71522 \\
+2815152 & End to End Sales & 136853 & 0.55547 \\
+99684 & Analytical Skills & 127620 & 0.51799 \\
+2197748 & MS Excel & 122110 & 0.49563 \\
+1821504 & Record Keeping & 120387 & 0.48864 \\
+2418 & Relationship Management & 99326 & 0.40315 \\
+2072514 & MS Office & 94916 & 0.38525 \\
+2304 & Presentation Skills & 94820 & 0.38486 \\
+13866 & Multitasking Skills & 94097 & 0.38193 \\
+2636256 & Security Principles & 91788 & 0.37256 \\
+1919 & Field Task Management & 88681 & 0.35995 \\
+59532 & Communication Skills & 87170 & 0.35381 \\
+5578 & Reporting Skills & 80613 & 0.32720 \\
+1913 & Conservation Awareness & 79647 & 0.32328 \\
+1814362 & Risk Management & 79256 & 0.32169 \\
+1824856 & Installation Process & 78215 & 0.31747 \\
+218 & Configuration Switches & 70231 & 0.28506 \\
+2622 & MIT Knowledge & 68194 & 0.27679 \\
+16954 & Market Knowledge & 67934 & 0.27574 \\
+8322 & Equipment Maintenance Coordination & 64023 & 0.25986 \\
+11854 & Scale Management & 63015 & 0.25577 \\
+1804476 & Installation Process Knowledge & 61609 & 0.25006 \\
+8802 & Data Management & 60622 & 0.24606 \\
+441874 & Customer Service Skills & 60271 & 0.24463 \\
+1680640 & Strong Mathematical Knowledge & 55928 & 0.22700 \\
+113 & Financial Accounting & 55182 & 0.22398 \\
+17420 & Business Development Strategies & 54458 & 0.22104 \\
+100742 & Japanese and Korean Language Proficiency & 54262 & 0.22024 \\
+571472 & Transaction Management & 53826 & 0.21847 \\
+\vspace{-0.4cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_t20skill}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/hist_skillmean_user.png}
+    \caption{Histogram of Mean Skill Proficiency (User)}
+    \label{fig:usermeanskill}
+\end{figure}
+\begin{table}[]
+    \caption{Frequency Statistics of Skill Proficiency Level (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq6} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq6}
+\end{table}
+
+
+\subsection{userEducation\_adb.csv}
+
+This data file contains educational experiences and related information for 2,030,867 users. (This is a subset of the main \texttt{users\_adb.csv} data, which includes 2,780,742 users.)
+
+\begin{itemize}
+    \item \textbf{N = }3,293,691
+    \item \textbf{Unique Identifier}: \texttt{eduid}. Each observation refers to a specific educational experience uploaded by a user, corresponding to a unique \texttt{eduid}.
+    \item \textbf{Other ID Information}: 
+    
+    \texttt{user\_id} (can be merged with other data files in the user dataset. Note that the number of users covered by each file varies and is specified in the descriptions of individual files.), 
+    
+    \texttt{educountryid} (150 unique countries. 20.96\% missing. 76.68\% of education experiences are in Pakistan), 
+    
+    \texttt{educityid} (2,543 unique cities. 20.52\% missing).
+    \end{itemize}
+\subsubsection*{\textbf{Main Variables}:}
+    \begin{enumerate}
+        \item \texttt{edulevel}: The education level for this educational experience. This is a user-uploaded string with highly inconsistent formatting (e.g., some entered "Bachelor," "Bachelor Degree," or "Bachelor in xx"; a small portion entered IDs, and about 0.17\% are garbled characters). 
+        
+        Overall, entries indicating "Bachelor" account for about 50\% of observations, with others including Diploma (3.66\%), Doctorate (0.2\%), Intermediate (approx. 17\%), M.Phil (approx. 2\%), etc. There are almost no missing values.
+        \item \texttt{degreeTypeID}: The ID for the degree type of this educational experience. However, there is no file mapping these IDs to degree names. These appear to be system-defined options that users select from. There are a total of 80 degree types. 43.29\% are missing. Frequency statistics are shown in Table \ref{tab:users_freq7}.
+
+\begin{table}[]
+\tiny
+    \caption{Frequency Statistics of Degree Type (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.2cm}
+\\
+\input{Tables/user_freq7} \\
+\vspace{-0.3cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq7}
+\end{table}
+
+
+
+        
+        \item \texttt{degreeMajorID} / \texttt{degreeMajorSub}: The ID and name of the major. 10.5\% missing. Many educational experiences correspond to multiple degree majors, separated by commas. Some degree majors may be assigned different \texttt{degreemajorid}s due to spelling errors, such as "Accounting \& Finance" and "Accounting and Finance." If possible, a complete table mapping major IDs to names should be obtained from Rozee to significantly facilitate processing.
+
+        
+        \item \texttt{highestdegreeid}: The codebook explains this as "Highest qualification," but its meaning is unclear, and the names corresponding to the IDs are unknown. It is also confirmed that it does not use the same encoding rules as the \texttt{degreeTypeID} variable. There are 194 unique IDs. 1.04\% are missing.
+        \item \texttt{eduyear}, \texttt{createdon}: The year of education and the time the record was uploaded. The education year should refer to the completion year, as some \texttt{eduyear} values are later than the \texttt{createdon} time. \texttt{eduyear} is 0.84\% missing, with its time distribution shown in Figure \ref{fig:useredu}.
+
+
+
+        
+        \item \texttt{edugradetype}, \texttt{edugradeval}, \texttt{edugradeoutof}: The grade type, grade value, and maximum grade value for the educational experience (e.g., GPA 3.5 (out of) 4.0). For "Percentage" and "Grade" types, \texttt{edugradeoutof} is mostly 0, which is evident. These three variables are 52.15\% missing. Frequency statistics for grade types are shown in Table \ref{tab:users_freq8}.
+        \item \texttt{schoolname}, \texttt{schooltype}: The name and type of the school for the educational experience. Very few missing values. Frequency statistics for school type are shown in Table \ref{tab:users_freq8}.
+    \end{enumerate}
+
+\begin{figure}
+    \centering
+        \caption{Histogram of Education Year (Users)}
+        \includegraphics[width=0.7\linewidth]{Figures/year_hist_user_education.png}
+
+    \label{fig:useredu}
+\end{figure}
+
+\begin{table}[]
+    \caption{Frequency Statistics of Grade Type and School Type (Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq8} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq8}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{userExperience\_adb.csv}
+This data file contains work experiences and related information for 1,425,009 users. (This is a subset of the main \texttt{users\_adb.csv} data, which includes 2,780,742 users.)
+
+\begin{itemize}
+    \item \textbf{N = }2,923,285
+    \item \textbf{Unique Identifier}: \texttt{expid}. Each observation refers to a specific work experience uploaded by a user, corresponding to a unique \texttt{expid}.
+    \item \textbf{Other ID Information}: 
+    
+    \texttt{user\_id} (can be merged with other data files in the user dataset. Note that the number of users covered by each file varies and is specified in the descriptions of individual files.),
+    
+    \texttt{empcountryid} (155 unique countries. 10.48\% missing. 84.8\% of work experiences are in Pakistan), 
+    
+    \texttt{empcityid} (2,521 unique cities. 16.05\% missing).
+    \end{itemize}
+\subsubsection*{\textbf{Main Variables}:}
+    \begin{enumerate}
+        \item \texttt{jobtitle}: The job title for the work experience. This is a user-uploaded string with inconsistent formatting, but there are no obvious missing values (though it's possible some \texttt{jobtitle} strings are meaningless or clearly incorrect).
+        \item \texttt{jobstart}, \texttt{jobend}: The start and end dates for this job experience. Very few missing values, all less than 0.5\%. The format is inconsistent, but these appear to be system-defined options, with some entries including year-month-day and others only year-month.
+        
+        The \texttt{jobend} string contains "Present," which combines to form entries like "2020-01-01 --- Present." 
+        
+        After simple cleaning, the year distribution of \texttt{jobstart} is shown in Figure \ref{fig:userstart}, and after excluding all experiences where \texttt{jobend} is "Present," the distribution of duration in months is shown in Table \ref{tab:userjobduration}.
+
+    
+\begin{figure}
+    \centering
+       \caption{Histogram of Start Year of Past Job Experience (Users)} \includegraphics[width=0.5\linewidth]{Figures/year_hist_user_experiencestart.png}
+
+    \label{fig:userstart}
+\end{figure}
+
+\input{Tables/user_jobduration_sum}
+        
+        \item \texttt{jobcompany}, \texttt{jobcompanyid}: The name and ID of the company for the work experience. However, this cannot be merged with \texttt{companies\_adb.csv} in the company dataset because they use different encoding systems: the same code corresponds to different companies. Additionally, there are 1,018,443 unique IDs, far exceeding the 102,460 companies included in \texttt{companies\_adb}. 0.92\% are missing.
+        \item \texttt{createdon}: The time the user filled in and uploaded this record.
+        \item \texttt{manage\_team}: Flag indicating team management experience. Frequency statistics are shown in Table \ref{tab:users_freq9}.
+    \end{enumerate}
+
+\begin{table}[]
+    \caption{Frequency Statistics of Management Experience(Users)}
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/user_freq9} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+    \label{tab:users_freq9}
+\end{table}
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,79 @@
+prompt_beginning_rg2 = """Below is a job posting. Please assess to what extent the job requires the job applicant to have digital skills. Use the following classification:
+- A: No digital skills. For context, no digital skills means no computer or digital tool usage is required, except for basic communication (e.g. texting or calling).
+- B: Basic digital skills. For context, basic digital skills include tasks like using email, basic office software (e.g., Word, simple Excel for data entry/lists, simple Powerpoint presentations), data entry, posting social media content, or performing other simple digital tasks, etc.
+- C: Intermediate digital skills. For context, intermediate digital skills involve using tools like CRM software, data analysis (e.g., creating reports/dashboards from existing data), basic programming (e.g., simple scripts, website updates), complex office software use (e.g., advanced Powerpoint presentations integrating multimedia or data visualization, Excel pivot tables/functions/macros), social media content management (e.g. analytics, coordinating across platforms, ad campaigns), etc.
+- D: Advanced digital skills. For context, advanced digital skills covers high-level tasks like programming, AI, machine learning, managing IT infrastructure, etc.
+
+**Internal Reasoning Guidance:**
+- Scan the job posting for explicit mentions of tasks requiring digital tools or software, and for required digital skills and competencies.
+- Prioritize information directly mentioned in the posting. Use your general knowledge about job roles and country-specific context to infer necessary digital skills mainly when the description in the job ad is sparse or ambiguous.
+
+Provide a brief motivation for your classification. Your motivation should be derived directly from your internal reasoning. Keep the motivation short by not writing out full sentences, focusing on keywords and omitting uninformative words.
+
+**Output Guidance:**
+Respond ONLY with a single, valid JSON object containing the following keys:
+- "jobid": The JOB ID provided in the job posting.
+- "classification": The classification code (A, B, C, or D).
+- "motivation": Your brief motivation text.
+
+
+--- Job Posting Start ---
+    
+"""
+
+
+prompt_beginning_ai_seq = """Analyze the job posting below to assess the required level of advanced *artificial intelligence (AI)* skills. Use the following classification:
+- *no-ai*: No advanced AI-related skills required (except for simple use of generative AI such as ChatGPT, Copilot, or similar to draft text, write code, summarize documents, etc.). 
+- *ai-use*: Requires using, implementing, or applying existing AI tools, models, or techniques in complex applications, such as machine learning, API calling, complex prompt engineering for generative AI integration, etc.
+- *ai-develop*: Requires the development of AI tools, such as training or fine-tuning large language models, or building custom AI pipelines, etc.
+
+**Internal Reasoning Guidance:**
+- Scan the job posting for explicit mentions of tasks requiring digital tools or software, and for required digital skills and competencies.
+- Prioritize information directly mentioned in the posting. Use your general knowledge about job roles and country-specific context to infer necessary digital skills mainly when the description in the job ad is sparse or ambiguous.
+
+Provide a brief motivation for your classification. Your motivation should be derived directly from your internal reasoning. Keep the motivation short by not writing out full sentences, focusing on keywords and omitting uninformative words.
+
+**Output Guidance:**
+Respond ONLY with a single, valid JSON object containing the following keys:
+- "jobid": The JOB ID provided in the job posting.
+- "ai_skills": classification whether AI skills are required (no-ai, ai-use, or ai-develop).
+- "motivation": Your brief motivation text.
+
+
+--- Job Posting Start ---
+    
+"""
+
+
+
+
+prompt_beginning_ai3 = """Below is a job posting. Please assess to what extent the job requires the job applicant to have digital skills. Use the following classification:
+- *A*: No digital skills. For context, no digital skills means no computer or digital tool usage is required, except for basic communication (e.g. texting or calling).
+- *B*: Basic digital skills. For context, basic digital skills include tasks like using email, basic office software (e.g., Word, simple Excel for data entry/lists, simple Powerpoint presentations), data entry, posting social media content, or performing other simple digital tasks, etc.
+- *C*: Intermediate digital skills. For context, intermediate digital skills involve using tools like CRM software, data analysis (e.g., creating reports/dashboards from existing data), basic programming (e.g., simple scripts, website updates), complex office software use (e.g., advanced Powerpoint presentations integrating multimedia or data visualization, Excel pivot tables/functions/macros), social media content management (e.g. analytics, coordinating across platforms, ad campaigns), etc.
+- *D*: Advanced digital skills. For context, advanced digital skills covers high-level tasks like programming, AI, machine learning, managing IT infrastructure, etc.
+
+
+**Internal Reasoning Guidance:**
+- Scan the job posting for explicit mentions of tasks requiring digital tools or software, and for required digital skills and competencies.
+- Prioritize information directly mentioned in the posting. Use your general knowledge about job roles and country-specific context to infer necessary digital skills mainly when the description in the job ad is sparse or ambiguous.
+
+
+AFTER determining the digital skills classification (A, B, C, or D), provide a separate assessment to whether the job requires specific advanced digital skills related to artificial intelligence (AI). For example, AI skills include machine learning, deep learning, natural language processing (NLP), computer vision, and the development of AI tools. Given that AI-related skills tend to be advanced, this should only occur for digital skills category D.
+- *no-ai*: no advanced AI-related skills required (except for simple use of ChatGPT, Copilot, or similar to draft text, write code, summarize documents, etc.). If the digital skills category is A, B, or C, then  should fall here.
+- *ai-implement*: Requires using, implementing, or applying existing AI tools, models, or techniques in complex applications, such as machine learning, API calling, complex prompt engineering for generative AI integration, etc.
+- *ai-develop*: Requires the development of AI tools, such as training or fine-tuning large language models, or building custom AI pipelines, etc.
+
+Provide a brief motivation for your classification. Your motivation should be derived directly from your internal reasoning. Keep the motivation short by not writing out full sentences, focusing on keywords and omitting uninformative words.
+
+**Output Guidance:**
+Respond ONLY with a single, valid JSON object containing the following keys:
+- "jobid": The JOB ID provided in the input.
+- "classification": The digital skills classification code (A, B, C, or D).
+- "ai_skills": Separate classification whether AI skills are required (no-ai, ai-implement, or ai-develop).
+- "motivation": Your brief motivation text.
+
+
+--- Job Posting Start ---
+    
+"""

@@ -1,0 +1,260 @@
+
+
+
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{enumitem} 
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{tikz}
+\usepackage{xcolor} 
+\definecolor{skyblue}{RGB}{128,111,189}
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,  
+    citecolor=skyblue,  
+    urlcolor=skyblue    
+}
+
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{mathpazo}
+\geometry{left=1in,right=1in,top=1in,bottom=1in}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{afterpage}
+\bibliographystyle{apalike}
+
+\title{Rozee Data: Salary Expectation}
+\author{Yifei Wu}
+\date{October 2025}
+
+\begin{document}
+\onehalfspacing
+
+\maketitle
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\section{Introduction}
+
+This document presents the analysis of wage/salary expectations within the ROZEE dataset. The ROZEE data offers a unique advantage over most job platforms: every application record includes the user's self-reported expected salary and current salary. Meanwhile, covering all application records from 2020 to 2025, the dataset provides a comprehensive scope for our exploration.
+
+While previous analysis (\texttt{Rozee\_description\_v2.pdf}) mainly focused on static expectations from the user profile, this document concentrates specifically on the \textbf{dynamic} salary expectation reported in each individual application to provide deeper insights.
+
+
+\section{Quality Check}
+
+\begin{enumerate}
+    \item \textbf{What is the variation in expected salary reported by a single user across job applications?}
+\end{enumerate}
+
+As officially explained by Rozee, every time a user starts a new application, the system retains the salary reported in the previous application as the default value. Therefore, if users wish to modify this value, they face a certain cost and are inclined to simply reuse the previous value. The purpose here is to verify whether an individual reports the different current salary and expected salary across all job applications within a period, in order to check if this self-reported data is meaningful.
+
+The simplest method is to calculate the standard deviation, checking whether the variance of the expected salary across applications is greater than 0. The sample period spans 4.5 years, from 2020 to 2025. First, we filter out users who submitted fewer than 10 applications during this 4.5-year period. I then calculated the standard deviation of the \textbf{expected salary} for each user's applications within the following windows: 1 month, 1 quarter, 1 year, and 4.5 years. The results are shown in Table \ref{quality11}:
+
+For example, when using a 1-year time segment, there are a total of 871,894 user\_year groups. Among these groups, those where the within-group standard deviation is greater than 0 account for 30.3\%. These groups with a within-group standard deviation greater than 0 correspond to 52.8\% of all users, meaning that \textbf{52.8\% of all users submitted multiple applications with varying expected salaries inside at least one year}. And, \textbf{the applications submitted by these 52.8\% of users account for 51.9\% of the total number of applications.} Other columns follow the same interpretation. My subjective assessment is that this suggests the data quality is relatively good.
+
+
+\begin{table}[h!]
+\footnotesize
+    \centering
+    \caption{Expected Salary Variation Across Time Segments}
+    \begin{tabular}{ccccc}
+    \hline
+     & \textbf{4.5 Years} & \textbf{1 Year} & \textbf{1 Quarter} & \textbf{1 Month} \\
+    \hline
+    \text{Number of User-Time} & 328513 & 871894 & 1801380 & 3095863 \\
+
+    \text{Number of User-Time with Variation} & 199719 & 264349 & 271077 & 248685 \\
+     & 61\% & 30\% & 15\% & 8\% \\
+   
+    \text{Number of User-Time without Variation} & 124269 & 470458 & 1081126 & 1839235 \\
+     & 38\% & 54\% & 60\% & 59\% \\
+    
+    \text{Number of User-Time with missing SD} & 4525 & 137087 & 449177 & 1007943 \\
+    \textit{(Only 1 Non-missing Expected Salary)} & 1\% & 16\% & 25\% & 33\% \\
+
+    \hline
+    &&&& \\
+    \text{Number of Users} & 328513 & 328513 & 328513 & 328513 \\
+    
+    \text{Number of Users with Variation (in at least one time period)} & 199719 & 173761 & 150888 & 131386 \\
+     & 61\% & 53\% & 46\% & 40\% \\
+
+    \hline
+
+
+    &&&& \\
+    \text{Number of Applications} & 19794856 & 19794856 & 19794856 & 19794856 \\
+    
+    \text{Number of Applications by Users with Variation} & 15373296 &	10275574&	5745005&	3208415
+ \\
+     & 78\% & 52\% & 29\% & 16\% \\
+
+    \hline
+    
+    \end{tabular}
+    \label{quality11}
+\end{table}
+
+
+A more complex scenario is that a user's historical expected salary standard deviation might be large, yet they simply alternate between two values. This still may not represent good variation. Therefore, we can plot the  \textbf{Relative Position of Expected Salary within Individual's Range} , as shown in Figure \ref{quality12}: After calculating the maximum and minimum expected salary across a person's application history, we compute the relative position of the expected salary of each application within that range. As shown in the figure, approximately 45\% of the applications report a value that falls between a person's maximum and minimum values, and the positions are broadly distributed, which to some extent corroborates the existence of variation.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/quality_1_2.png}
+    \caption{Relative Position of Expected Salary within Individual's Range}
+    \label{quality12}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Further Analysis}
+
+
+\begin{enumerate}
+    \item \textbf{In each application, what is the relationship between the self-reported expected salary and the probability of being shortlisted?}
+\end{enumerate}
+
+
+First, we must note that a large number of jobs have no shortlist status (or label) for any received application, so we should exclude the observations corresponding to these jobs. After exclusion, the frequency statistics are shown in Table \ref{ana11}: In the remaining application sample, shortlisted applications account for roughly 10\%.
+
+We do a simple FE regression:
+
+$$ Shortlisted_{u,j,a} = \beta_1 \ln(ExpectedSalary_{u,j,a}) + \mu_u + \lambda_j + \epsilon_{u,j,a}$$
+
+The results are shown in Table \ref{ana12}. We regress a dummy variable for being shortlisted against the log of the expected salary (after truncating the expected salary at the 0.5\% level), sequentially adding User FE and Job FE. We observe that after controlling for both User and Job Fixed Effects, a higher self-reported expected salary is associated with a lower probability of being shortlisted, although the magnitude is small. This aligns somewhat with the intuition that firms prefer applicants who demand a lower salary. 
+
+However, the opposite direction is also intuitive: expected salary represents the user's assessment of their own ability, which firms partly trust, thus preferring applicants with higher reported salaries. Addressing this question requires a more rigorous regression specification.
+
+
+
+\begin{table}[]
+    \centering
+    \caption{Frequency: Shortlisted Application}
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/ana_1_1} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+\label{ana11}
+\end{table}
+
+
+
+\begin{table}[]
+    \centering
+        \caption{Regression: Shortlisted \& Expected Salary}
+\input{Tables/ana_1_2}
+    \label{ana12}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Does the self-reported expected salary align with the salary range listed in the job posting? What is the distribution?}
+\end{enumerate}
+
+Since job postings are divided into those that display a salary range and those that do not, we focus here only on the former. That is, we observe how a user chooses to self-report their expected salary when they can see the salary range listed in the job posting. 
+
+I calculated the relative position of the self-reported expected salary with respect to the job posting salary range, and after excluding outliers, the distribution results are shown in Figure \ref{ana13}. It can be seen that the majority of people reported a value within the salary range stated by the job, but many also reported values outside the range. Among these, the largest group self-reported at the lower bound of the salary range listed in the job posting, which is intuitive and consistent with the results in the previous question: firms prefer applicants who demand a lower salary.
+
+There is a highly confusing point here: in theory, exploring self-reporting behavior under hidden salary ranges would be more interesting, as it should purely reflect users' preferences for that job, uninfluenced by the listed salary. However, surprisingly, even in the hidden case, the range of self-reported expected salaries is highly consistent with the true salary range. This is weird, and I am still awaiting an official explanation from Rozee.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/ana_2_3.png}
+    \caption{Relative Position of Expected Salary within Job's Salary Range (Visible)}
+    \label{ana13}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{As a person's number of applications increase, how do their expected salary and salary expectation gap (gap between current and expected salary) change?}
+\end{enumerate}
+
+
+First, we again drop users who submitted fewer than 10 applications. 
+
+For each individual's application history, I sort their applications by time to observe how, on average, the expected salary and salary expectation gap change as the number of applications increases. (As discussed previously, the salary expectation gap, to some extent, represents the applicant's confidence level.) 
+
+The results are shown in Figure \ref{ana3132}, retaining the trend for the first 40 sorted applications. It can be seen that as people submit more applications, the expected salary gradually increases, but the actual confidence level gradually decreases.
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/ana_3_1.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/ana_3_2.png}
+    \end{subfigure}
+    
+    \caption{Salary Expectation \& Application Order }
+    \label{ana3132}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\onehalfspacing
+\setlength\bibsep{0pt}
+\bibliography{ref}
+
+\end{document}

@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\newcommand{\sym}[1]{\ensuremath{^{#1}}}
+
+\title{RozeeAI 20-Year Analysis: Results Report}
+\author{Alec Brockell}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{1.\quad Overview}
+
+This report presents the results of the RozeeAI difference-in-differences analysis adapted for the full 20-year Rozee.pk dataset (2004--2024, 740,657 job postings). The analysis follows the same empirical strategy as the ADB presentation (Ramachandran \& Garcia-Mandic\'{o}), estimating the impact of public-use ChatGPT (launched November 2022) on labor demand and wages by occupation-level AI exposure.
+
+\noindent \textbf{Key differences from the ADB analysis:}
+\begin{itemize}
+    \item \textbf{Sample:} 740K jobs (2004--2024) vs.\ 338K (2020--2025)
+    \item \textbf{Pre-period:} 18 years vs.\ $\sim$3 years
+    \item \textbf{SOC matching:} Claude Haiku title $\to$ SOC code (single pass) vs.\ GPT-4 three-level matching
+    \item \textbf{Salary:} Combined \texttt{sal\_from\_num} + \texttt{sal\_from\_hide\_num}, p99 trimmed
+    \item \textbf{ISIC sector:} Not available in 20-year data; skipped
+\end{itemize}
+
+%% DATA OVERVIEW — fill in after Step 4 runs
+%% \section*{2.\quad Data Summary}
+%% To be filled with sample sizes, match rates, occupation counts from the analysis log.
+
+
+\clearpage
+\section*{2.\quad DiD Results: Labor Demand (Postings)}
+
+The dependent variable is log of monthly job postings by occupation. All regressions include occupation and month fixed effects. The coefficient of interest is Post-2022 $\times$ AI Exposure.
+
+\vspace{0.5cm}
+
+\input{../tables/did_postings_20yr_human.tex}
+
+\vspace{1cm}
+
+\input{../tables/did_postings_20yr_gpt.tex}
+
+
+\clearpage
+\section*{3.\quad DiD Results: Wages}
+
+The dependent variable is log of wages by occupation. All regressions include occupation and month fixed effects.
+
+\vspace{0.5cm}
+
+\input{../tables/did_wages_20yr_human.tex}
+
+\vspace{1cm}
+
+\input{../tables/did_wages_20yr_gpt.tex}
+
+
+\clearpage
+\section*{4.\quad Event Studies}
+
+Event study plots show the coefficient on AI Exposure $\times$ month relative to ChatGPT launch (November 2022). The $\beta$ scoring scheme is used. Month $-1$ is omitted as the baseline. 80\% confidence intervals shown. The full model covers 2004--2024; plots display the $\pm 36$ month window for comparability with the ADB analysis.
+
+\vspace{0.5cm}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/es_postings_20yr_human.png}
+    \caption{Labor demand --- Human rating}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/es_postings_20yr_gpt.png}
+    \caption{Labor demand --- GPT rating}
+\end{subfigure}
+
+\vspace{1cm}
+
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/es_wages_20yr_human.png}
+    \caption{Wages --- Human rating}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/es_wages_20yr_gpt.png}
+    \caption{Wages --- GPT rating}
+\end{subfigure}
+\caption{Event studies: AI exposure $\times$ months relative to ChatGPT launch ($\beta$ scoring)}
+\end{figure}
+
+
+\clearpage
+\section*{5.\quad Notes}
+
+\begin{itemize}
+    \item \textbf{Estimation equation:} $Y_{it} = \beta_0 + \beta_1 \text{LLM\_Exposure}_i + \beta_2 \text{Post}_t + \beta_3 (\text{LLM\_Exposure}_i \times \text{Post}_t) + \varepsilon_{it}$, with occupation and month fixed effects absorbed via \texttt{reghdfe}.
+    \item \textbf{AI exposure measures:} Eloundou et al.\ (2024) task-level labels (E0/E1/E2) aggregated using three scoring schemes: $\alpha$ (E1 only), $\beta$ (E1 + 0.5$\times$E2), $\gamma$ (E1 + E2). Both human annotator and GPT-4 ratings.
+    \item \textbf{Post period:} November 2022 onward (public launch of ChatGPT).
+    \item \textbf{Occupation unit:} Broad occupation (459 categories) from O*NET-SOC hierarchy, assigned via modal SOC code across matched tasks per job.
+    \item \textbf{35K ADB-only jobs:} The ADB dataset contains 35,545 job IDs not present in the 20-year data. These are excluded by design.
+    \item \textbf{SOC code validation rate:} $\sim$79\% of Claude Haiku SOC code returns matched a valid code in the O*NET labelset. Unmatched jobs are excluded.
+\end{itemize}
+
+\end{document}

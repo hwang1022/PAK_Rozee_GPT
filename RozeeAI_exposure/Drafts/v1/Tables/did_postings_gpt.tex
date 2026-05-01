@@ -1,0 +1,18 @@
+\begin{table}[h]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Impact of public-use ChatGPT on labor demand (GPT rating) \label{tab:did_postings_gpt}}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+                    &\multicolumn{1}{c}{$\alpha$}&\multicolumn{1}{c}{$\beta$}&\multicolumn{1}{c}{$\gamma$}\\
+\hline
+Post-2022 x AI Exposure (GPT)&      -0.830***&      -0.691***&      -0.353***\\
+                    &     (0.060)   &     (0.055)   &     (0.040)   \\
+Constant            &       1.814***&       1.886***&       1.858***\\
+                    &     (0.007)   &     (0.012)   &     (0.014)   \\
+\hline
+N                   &      13,180   &      13,180   &      13,180   \\
+\hline\hline
+\multicolumn{4}{p{0.7\linewidth}}{\footnotesize * p $<$ 0.1; ** p $<$ 0.05; *** p $<$ 0.01. Standard errors in parenthesis.          Dependent variable is Log of monthly job postings by occupation. Includes occupation and month fixed effects.}\\
+\end{tabular}
+\end{table}

@@ -1,0 +1,1206 @@
+
+
+
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{enumitem} 
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{tikz}
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=black]{hyperref}
+
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{left=1in,right=1in,top=1in,bottom=1in}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{afterpage}
+\bibliographystyle{apalike}
+
+\title{Rozee Data Description}
+\author{Yifei Wu}
+\date{July 2025}
+
+\begin{document}
+\onehalfspacing
+
+\maketitle
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\section{Introduction}
+
+This document represents a deeper dive into the Rozee dataset, primarily focusing on sanity checks and more exploratory descriptives of its variables, serving as a basis for more in-depth data analysis.
+
+
+\section{Job Dataset}
+
+\subsection*{Sanity Check}
+
+\begin{enumerate}
+  \item \textbf{Are low-experience jobs consistently paid less? Does this relationship vary across firms?} 
+\end{enumerate}
+
+ For each job, after calculating the median of the salary range as the salary value and removing values in \texttt{req\_experience} with fewer than 100 occurrences, the plot is shown in Figure \ref{jobcheck11}. It can be clearly seen that, overall, as the required work experience increases, the salary level also rises, but the number of jobs decreases. Most jobs in the data are for low experience, which means they are low-paying.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_1_1.png}
+    \caption{Salary/Num \& Experience Requirement (Jobs)}
+    \label{jobcheck11}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Does the ``careerlevel'' label (e.g., ``Intern'', ``Entry Level'', ``Experienced Professional'') align with the actual required experience field? Do ``Intern/Student'' positions always require zero or near-zero experience?}
+\end{enumerate}
+
+
+The \texttt{careerlevel} variable primarily contains four types, from lowest to highest: Intern/Student (3.86\%), Entry Level (29.62\%), Experienced Professional (62.61\%), and Department Head (1.39\%). Figure \ref{jobcheck21} shows the distribution of \texttt{req\_experience} grouped by these levels. As the career level moves from low to high, the distribution of experience requirements gradually shifts to the right. It is logical that most requirements for Intern/Student positions are "fresh" or "less than 1 year" of experience.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_check_2_1.png}
+    \caption{Career Level \& Experience Requirement (Jobs)}
+    \label{jobcheck21}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are salary levels aligned with career level tags? Are there overlaps between entry-level and experienced-level jobs?}
+    
+\end{enumerate}
+
+After calculating the median of the salary range as the salary value for each job and retaining the four career levels mentioned above, a box plot is created as shown in Figure \ref{jobcheck31}. As the career level increases, the salary rises significantly, but there is also some overlap in salary between entry-level and experienced-level jobs.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_3_1.png}
+    \caption{Career Level \& Salary (Jobs)}
+    \label{jobcheck31}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are the values in the \texttt{req\_experience} and \texttt{max\_experience} fields clean and interpretable? Do they follow consistent formatting or contain free-text anomalies?}
+\end{enumerate}
+
+The raw frequency statistics for \texttt{req\_experience} and \texttt{max\_experience} are shown in Table \ref{jobcheck41} and Table \ref{jobcheck42}, respectively. As can be seen, the formatting for \texttt{req\_experience} is messy, while \texttt{max\_experience} has a clear and consistent format with no conflicting items. However, many jobs do not have a \texttt{max\_experience} set. For \texttt{req\_experience}, the messy items correspond to only a little over 100 jobs, which is not a major issue and is likely related to a version change in the data entry form. The subsequent exploratory analysis will delve more into \texttt{max\_experience}.
+
+
+
+
+\begin{table}[]
+\scriptsize
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.3cm}
+\\
+\input{Tables/job_check_4_1} \\
+\vspace{-0.6cm} \\
+\hline 
+\hline
+    \end{tabular}
+\caption{Frequency: Min Experience Requirement (Jobs)}
+\label{jobcheck41}
+\end{table}
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{cccc}
+\hline
+\hline
+\vspace{-0.4cm}
+\\
+\input{Tables/job_check_4_2} \\
+\vspace{-1cm} \\
+\hline 
+\hline
+    \end{tabular}
+\caption{Frequency: Max Experience Requirement (Jobs)}
+\label{jobcheck42}
+\end{table}
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Similar to the experience requirement, is there a similar relationship between the education requirement and salary/career level?}
+
+\end{enumerate}
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Is there a similar relationship between the age requirement and salary/career level?}
+
+\end{enumerate}
+
+
+For each job, after averaging the age requirement range and the salary range, the relationship between age requirement and salary is shown in Figure \ref{jobcheck61}, and its relationship with career level is shown in Figure \ref{jobcheck62}. The results align with expectations: as the age requirement increases, so do the salary and career level. It is also worth noting that the general distribution of age requirements can be seen in Figure \ref{jobcheck61}, and the age requirement variable has a 63\% missing rate.
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_6_1.png}
+    \caption{Salary \& Age Requirement (Jobs)}
+    \label{jobcheck61}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_6_2.png}
+    \caption{Career Level \& Age Requirement (Jobs)}
+    \label{jobcheck62}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are there significant differences in job salaries across different industries, and are these differences consistent with common expectations?}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{What is the distribution of the application duration for job postings? Is it proportional to the number of people hired and the number of applications received?}
+    
+   
+\end{enumerate}
+
+The distribution of application duration (days) by year is shown in Figure \ref{jobcheck81} \footnote{"Application duration" refers to the number of days between a job posting's display date and its application deadline (\texttt{applyby}).}. As seen, the duration for each year is concentrated around 30 and 31 days, and the overall distribution remains largely unchanged over time. However, shorter durations are more common in later years.
+
+After dropping the job postings with a application duration more than 40 days, the relationship between application duration and total positions \footnote{"Total positions" refers to the number of positions specified for each job posting.} and number of applications received is shown in Figures \ref{jobcheck82}, \ref{jobcheck83}, and \ref{jobcheck84}. Notably, Figure \ref{jobcheck83} shows an unusual inverse relationship between the number of applications received and the application duration, while the others are as expected.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_check_8_1.png}
+    \caption{Distribution and Trend of Application Duration (Jobs)}
+    \label{jobcheck81}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_8_2.png}
+    \caption{Total Positions \& Application Duration (Jobs)}
+    \label{jobcheck82}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_8_3.png}
+    \caption{Num of Application \& Application Duration (Jobs)}
+    \label{jobcheck83}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_8_4.png}
+    \caption{Num of Application \& Total Positions (Jobs)}
+    \label{jobcheck84}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Is there a basic correlation between the number of total positions and the size of the companies posting those jobs?}
+
+\end{enumerate}
+
+For each company, after summing up the total number of people it hires (total positions) and merging this with the company dataset, the relationships with number of offices and number of employees are shown in Figure \ref{jobcheck91} and Figure \ref{jobcheck92}, respectively.
+
+Overall, it can be seen that a higher number of offices correlates with more hires, and a larger number of employees also generally correlates with more hires. Therefore, the relationship between company size and the number of hires is consistent with expectations.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_9_1.png}
+    \caption{Total Positions \& Number of Offices (Jobs\&Company)}
+    \label{jobcheck91}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_check_9_2.png}
+    \caption{Total Positions \& Number of Employees (Jobs\&Company)}
+    \label{jobcheck92}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are the \texttt{jobpackage}, \texttt{isfeatured}, \texttt{istopjob}, and \texttt{ispremiumjob} variables generally consistent with Salary and Career Level?}
+    
+\end{enumerate}
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are the current salary and expected salary of candidates in the application generally consistent with the salary listed in the job posting?}
+    
+\end{enumerate}
+
+After merging the current salary and expected salary from each application record with the job dataset, Figure \ref{jobcheck111} shows their positive correlation with the job salary (converted to USD), which is consistent with expectations.
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_check_11_1.png}
+    \caption{Current/Expected Salary \& Job Salary (Jobs \& Application)}
+    \label{jobcheck111}
+
+\end{figure}
+
+
+
+
+
+
+
+
+  
+
+
+\subsection*{More Exploratory Descriptives}
+
+
+
+\begin{enumerate}
+    \item \textbf{Are job types distributed differently across cities or regions?}
+\end{enumerate}
+
+Here are some basic descriptions of the spatial distribution, using cities (Pakistan's second-level administrative division) as the unit. Figure \ref{jobexplore11} shows the spatial distribution of all job postings from 2020 to 2025. When categorized by \texttt{carrerlevel}, "Experienced Professional" and "Department Head" are considered \textbf{high-level}, while the others are considered \textbf{low-level}; the spatial distribution after this division is shown in Figure \ref{jobexplore12}. The average salary for each city is calculated and shown in Figure \ref{jobexplore13}, with the change in this trend over time also displayed in Figure \ref{jobexplore14}.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/job_explore_1_1.png}
+    \caption{Space Distribution of Jobs (Jobs)}
+    \label{jobexplore11}
+\end{figure}
+
+\begin{figure}
+    \centering
+
+        \includegraphics[width=1.0\linewidth]{Figures/job_explore_1_2.png}
+    
+    \caption{Space Distribution of High-Level and Low-Level Jobs (Jobs)}
+    \label{jobexplore12}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/job_explore_1_3.png}
+    \caption{Space Distribution of Job Salary (Jobs)}
+    \label{jobexplore13}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/job_explore_1_4.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/job_explore_1_5.png}
+    \end{subfigure}
+    \hfill
+    % 第三个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/job_explore_1_6.png}
+    \end{subfigure}
+    
+    \caption{Space Districution of Job Salary by Year (Jobs) }
+    \label{jobexplore14}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{A job's salary is typically a range. How is the size of this range distributed, and what does it generally correlate with?}
+\end{enumerate}
+
+
+For each job's salary range, I calculated both the absolute range and the relative range ((upper - lower)/mean), with the relative range likely being more informative. Figure \ref{jobexplore21} shows the distribution of the relative range by year. The distribution remains largely unchanged over time, with most values concentrated between 0 and 0.5.
+
+Figure \ref{jobexplore22} presents two sanity checks. The first observes the relationship between a job's total positions and its relative salary range, finding that as a job hires more people, its salary range is more likely to be larger. The second observes the relationship with the required experience range, showing that a wider experience range also correlates with a larger salary range. Both of these findings are consistent with common sense.
+
+Beyond these factors, the influences on the size of the relative salary range may be an interesting area to explore. Besides a job's intrinsic factors, it's possible that some companies, while unable to offer the salary at the high end of the range, use a wider range as a marketing tool to attract more applicants. My initial analysis appears to support this:
+
+Figure \ref{jobexplore23} indicates that smaller companies tend to have a larger relative range.
+
+Figure \ref{jobexplore24} suggests that compared to government and NGOs, private companies are more likely to have a larger relative salary range.
+
+Figure \ref{jobexplore25} shows that the relative range is larger for younger companies, where the job posting date is closer to the company's platform join date.
+
+This initial analysis partially supports my hypothesis, but it requires more rigorous analysis, such as controlling for a series of job-specific factors.
+
+
+
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_2_1.png}
+    \caption{Distribution of Salary Range (Jobs)}
+    \label{jobexplore21}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_2_2.png}
+    \caption{Salary Range \& Total Position/Experience Range (Jobs)}
+    \label{jobexplore22}
+\end{figure}
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_2_3.png}
+    \caption{Salary Range \& Number of Offices (Jobs\&Company)}
+    \label{jobexplore23}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_2_4.png}
+    \caption{Salary Range \& Company Own Type (Jobs\&Company)}
+    \label{jobexplore24}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_2_5.png}
+    \caption{Salary Range \& Company Age (Jobs\&Company)}
+    \label{jobexplore25}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{What are the trends for career level and salary for jobs in different industries? And what are the trends for the various requirements?}
+    
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{For the job posting, what does the application timing usually look like?}
+
+\end{enumerate}
+
+I calculated the average number of applications received within 30 days after a job's \texttt{displaydate}. As seen in Figure \ref{jobexplore41}, the highest number of applications are received on the first and second day, after which the number begins to decline and stabilizes around day 20.
+
+After distinguishing between high-level and low-level jobs, Figure \ref{jobexplore42} shows that the number of applications for low-level jobs decreases slightly slower over time, but the overall difference is not significant.
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_4_1.png}
+    \caption{Application Timing (Jobs)}
+    \label{jobexplore41}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_4_2.png}
+    \caption{Application Timing by Career Level (Jobs)}
+    \label{jobexplore42}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{What's the difference between jobs with quick questions and those without?}
+    
+\end{enumerate}
+
+
+In all job postings, 5.87\% of jobs include job questions. This could be an interesting point for future \textbf{text analysis} of these questions and their answers, to measure things like preferences and the precision of recruitment targets.
+
+In an initial exploration, Figure \ref{jobexplore51} and \ref{jobexplore52} shows that jobs with questions have a higher proportion of high-level jobs and a higher average salary. Figure \ref{jobexplore53} indicates that job questions may increase the cost of applying, thereby reducing the number of applications received. Figure \ref{jobexplore54} suggests a higher proportion of jobs with questions come from sole proprietorship company. Lastly, Figure \ref{jobexplore55} reveals that the proportion of jobs with questions is higher for both very small and very large companies.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_5_1.png}
+    \caption{Career Level \& Quick Question or Not (Jobs)}
+    \label{jobexplore51}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_5_2.png}
+    \caption{Job Salary \& Quick Question or Not (Jobs)}
+    \label{jobexplore52}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_5_3.png}
+    \caption{Number of Application \& Quick Question or Not (Jobs)}
+    \label{jobexplore53}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_5_4.png}
+    \caption{Company Own Type \& Quick Question or Not (Jobs)}
+    \label{jobexplore54}
+\end{figure}
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_5_5.png}
+    \caption{Company Size \& Quick Question or Not (Jobs)}
+    \label{jobexplore55}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Do higher-level jobs require more skills? Does skill count or importance correlate with pay?}
+\end{enumerate}
+
+
+First, Figure \ref{jobexplore63} displays the distribution of the number of skills required per job posting by year. In each posting, some skills are marked by employers as "important" while others are "unimportant." I've also plotted the distribution of the number of "unimportant" skills. The overall distribution remains fairly consistent over the years, with the total number of skills mostly centered around 3-4. The proportion of "unimportant" skills seems to show a slight decrease as the years progress.
+
+Figure \ref{jobexplore61} illustrates the relationship between career level and the number of skills, revealing no significant correlation between the two. Job postings for higher career levels do not necessarily require a greater number of skills. Figure \ref{jobexplore62}, however, shows a positive relationship between salary and the total number of skills.
+
+The "unimportant" skill requirement may be a potentially interesting aspect. What types of job postings have more "unimportant" skills? A preliminary exploration Figure \ref{jobexplore64} shows a negative relationship with salary, meaning lower-paying jobs tend to have a higher number and proportion of "unimportant" skill requirements. 
+
+So, what is the purpose of unimportant skills? A preliminary finding is that Figure \ref{jobexplore65} shows a decrease in the number of applications received as the total number of skill requirements increases. This relationship remains unchanged even after controlling for the number of important skills, indicating that unimportant skills also play a role in raising the application barrier, thereby simplifying the resume screening process for companies.
+
+Figure \ref{jobexplore66} shows that after controlling for the total number of skills, job postings with fewer unimportant skills receive fewer applications. This suggests that the role of unimportant skills in reducing the number of applications is weak. However, this is just a preliminary correlation analysis. The purpose and function of these skill requirements could be a point for future research.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_6_3.png}
+    \caption{Distribution of Skill Number (Jobs)}
+    \label{jobexplore63}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_6_1.png}
+    \caption{Career Level \& Skill Number (Jobs)}
+    \label{jobexplore61}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_6_2.png}
+    \caption{Job Salary \& Skill Number (Jobs)}
+    \label{jobexplore62}
+\end{figure}
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_6_4.png}
+    \caption{Job Salary \& Unimportant Skill (Jobs)}
+    \label{jobexplore64}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/job_explore_6_5.png}
+    \caption{Number of Application Received\& Skill (Jobs)}
+    \label{jobexplore65}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/job_explore_6_6.png}
+    \caption{Number of Application Received\& Unimportant Skill (Jobs)}
+    \label{jobexplore66}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\section{User \& Application Dataset}
+
+\subsection*{Sanity Check}
+
+\begin{enumerate}
+    \item \textbf{Is a candidate's reported age or birth year consistent with their declared work experience?}
+    
+\end{enumerate}
+
+The user's age is calculated by subtracting their date of birth from the profile's last updated time. This represents their age at the time the profile was most recently updated and should theoretically align with the other information in the profile.
+
+The purpose of a sanity check, which is relevant to all the following questions, is twofold. On the one hand, a user may not have updated all their profile entries consistently at the last modification time (e.g., they might have updated their experience but not their salary). On the other hand, the information a user enters for their birth date, salary, and other fields may not be accurate.
+
+Regarding the relationship between age and work experience, Figure \ref{usercheck12} shows a significant positive correlation, which to some extent proves the reliability of the information. The age distribution is shown in Figure \ref{usercheck11}, and I only kept samples with ages between 0 and 100, removing the rest that clearly had problematic ages.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/user_check_1_1.png}
+    \caption{Distribution of User's Age (User)}
+    \label{usercheck11}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/user_check_1_2.png}
+    \caption{Age \& Working Experience (User)}
+    \label{usercheck12}
+\end{figure}
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Are the user's expected salary and current salary generally consistent with their career level?}
+    
+\end{enumerate}
+
+Figure \ref{usercheck21} illustrates the relationship between career level, current salary, and expected salary in user profiles. A significant positive correlation can be observed, which to some extent demonstrates the consistency between the salary information and career level information in the user profiles.
+
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_check_2_1.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_check_2_2.png}
+    \end{subfigure}
+    
+    \caption{Salary \& Career Level (Users) }
+    \label{usercheck21}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Do users with team management experience earn higher salaries?}
+    
+\end{enumerate}
+
+
+Approximately half of the users have uploaded detailed information about each of their working experiences, including whether they had team management responsibilities. For this group of users, I created a dummy variable for whether they have team management experience and found a significant difference in salary (as shown in Figure \ref{usercheck31}) and career level (as shown in Figure \ref{usercheck32}), which proves the reliability of the user data.
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_check_3_1.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_check_3_2.png}
+    \end{subfigure}
+    
+    \caption{Salary \& Team Management Experience (Users) }
+    \label{usercheck31}
+\end{figure}
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/user_check_3_3.png}
+    \caption{Career Level \& Team Management Experience (User)}
+    \label{usercheck32}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection*{More Exploratory Descriptives}
+
+
+\begin{enumerate}
+    \item \textbf{What factors correlate with the difference between a candidate's current salary and their expected salary on their profile?}    
+\end{enumerate}
+
+
+This question, to some extent, reflects a job seeker's \textbf{confidence} in their future salary (compared to their current situation) at the time they last modified their profile. This is related to a large body of literature on \textbf{wage expectations} in labor economics, such as some recent papers  \cite{roussille2024role}, \cite{kiessling2024gender}.
+
+This question will temporarily only consider the wage expectation gap declared in the profile, exploring the impact of other indicators in a person's latest profile on this gap (assuming all information is consistent at the time the profile was last modified); it will not yet consider the wage expectation gap declared by each user in each application (which is more dynamic). The dynamic searching process for each user will be explored in the next question.
+
+First, I calculate the relative salary expectation gap by subtracting the current salary from the expected salary declared in the profile, and then dividing by the current salary. \footnote{I only keep a sample with relative gap<10} In this preliminary exploration, I will investigate the impact of four major factors on the wage expectation gap.
+
+The first factor is \textbf{gender}.\footnote{I am temporarily unsure which ID corresponds to which gender, but I suspect ID 443 is male and 445 is female} As shown in Figure \ref{userexplore11}, males have significantly higher expected salaries, but their relative salary expectation gap is on par with or even lower than that of females. Looking at the data grouped by the year the profile was last modified, Figure \ref{userexplore12} shows that before 2020, males were more confident than females, but after 2020, males began to be less confident than females. This might be due to the impact of the COVID, which may have hit males harder, leading to them being, on average, less ambitious about their salaries than females. However, this is inconsistent with the mainstream conclusions in the current literature.
+
+The next factor is \textbf{age/working experience}. Figure \ref{userexplore13} shows that expected salary definitely increases with age. However, the relationship between the relative salary expectation gap and age is an inverted U-shape: young people who have just entered the workforce around age 23 are the most ambitious, and this ambition steadily declines thereafter. Working experience shows a similar relationship: Figure \ref{userexplore14} shows that expected salary and work experience change positively in sync, but as years of work increase, job seekers become less ambitious.
+
+Then there's the completeness and attractiveness of the \textbf{personal profile}. I'm focusing on the \textbf{skills} and \textbf{experience} that users have uploaded. Figure \ref{userexplore15} shows that users who have uploaded skills and experience are slightly more ambitious than those who haven't. For \textbf{skills}, after dropping users with skill number>20, Figure \ref{userexplore16} shows an inverted U-shaped relationship between the relative salary expectation gap and the number of skills a user has entered. However, when we differentiate between skills a user has listed as proficient and non-proficient, Figure \ref{userexplore17} a positive correlation between the number of non-proficient skills and the salary gap, and a negative correlation with the number of proficient skills, which is somewhat counter-intuitive. For the user's \textbf{past work experience}, I calculated the average length of each user's work tenure. Figure \ref{userexplore18} shows that the longer a person's average work tenure, the more they tend to seek stable career choices and are relatively less ambitious, which is intuitive.
+
+Finally, there is the impact of \textbf{macroeconomic} factors. First, the \textbf{cohort effect}: grouped by the year the profile was last modified, Figure \ref{userexplore19} shows that the relative salary gap was impacted and decreased around 2020, and has since rebounded annually. This could be due to the impact of the COVID-19 pandemic. The other factor is location. People in economically developed areas/large cities have more external job opportunities and may be more ambitious. However, since I currently lack other data at the city level, I am only showing a general spatial distribution: Figure \ref{userexplore110} shows the spatial distribution of users' locations, and the spatial distribution of the relative salary gap.
+
+It's worth noting that the salary expectation gaps explored here are all values from a single point in time in the user's profile and do not represent the dynamic changes in a person's confidence. However, this gap could be an interesting area for future exploration.
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_3.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_1.png}
+    \end{subfigure}
+    
+    \caption{Salary (Gap) \& Gender (User) }
+    \label{userexplore11}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/user_explore_1_15.png}
+    \caption{Salary Gap \& Gender by Year (User)}
+    \label{userexplore12}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_6.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_4.png}
+    \end{subfigure}
+    
+    \caption{Salary (Gap) \& Age (User) }
+    \label{userexplore13}
+\end{figure}
+
+
+
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_7.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_8.png}
+    \end{subfigure}
+    
+    \caption{Salary (Gap) \& Working Experience (User) }
+    \label{userexplore14}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_9.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_13.png}
+    \end{subfigure}
+    
+    \caption{Salary Gap \& Whether Input Skill or Experience (User) }
+    \label{userexplore15}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/user_explore_1_10.png}
+    \caption{Salary Gap \& Skill Number (User)}
+    \label{userexplore16}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_11.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_12.png}
+    \end{subfigure}
+    
+    \caption{Salary Gap \& (Non) Proficient Skill Number (User) }
+    \label{userexplore17}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/user_explore_1_14.png}
+    \caption{Salary Gap \& Past Experience Duration (User)}
+    \label{userexplore18}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/user_explore_1_18.png}
+    \caption{Salary Gap \& Year (User)}
+    \label{userexplore19}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_16.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_1_17.png}
+    \end{subfigure}
+    
+    \caption{Space Distribution of User and Salary Gap (User) }
+    \label{userexplore110}
+\end{figure}
+
+
+\begin{enumerate}[resume]
+    \item \textbf{Provide a basic description of the user's job searching process.}
+    
+\end{enumerate}
+
+The job search process is essentially an exploration of a user's application history. The application data is all from 2020 to 2025; here is a basic description from three aspects:
+
+\textbf{The number of applications submitted per user}. Figure \ref{userexplore21} shows that, starting from 2020, the average number of applications submitted per user per year has gradually decreased. This may be due to the impact of COVID-19, which led to widespread unemployment and panic around 2020, causing more people to submit applications. Same figure shows the gender difference, where the number of applications submitted by men around 2020 was higher than that of women, but later gradually leveled out, indicating that COVID-19 had a greater impact on men in the labor market, which is consistent with the conclusion from the previous question.
+
+\textbf{The breadth or narrowness of a user's application scope}. I am measuring this here by the number of industries. Figure \ref{userexplore22}  shows the distribution of the number of industries spanned by each user's applications. Figure \ref{userexplore23} shows that men apply to a wider range of industries, and Figure \ref{userexplore24}  shows that users born around 1990—that is, users around 30 years old when submitting applications—apply to more industries, while older users apply to fewer.
+
+\textbf{Dynamic changes in a user's wage expectation during the application process.} Similar to the previous question, I calculated the relative and absolute difference between the expected and current salary for each application. Figure \ref{userexplore25}  shows that as users submit more and more applications, their "ambition" in each application gradually decreases.
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_2_1.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_2_7.png}
+    \end{subfigure}
+    
+    \caption{Number of Application per User \& Year/Gender (User) }
+    \label{userexplore21}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/user_explore_2_2.png}
+    \caption{Distribution of Industry Number in One's Application History (2020-2025) (User)}
+    \label{userexplore22}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/user_explore_2_3.png}
+    \caption{Industry Number in One's Application History (2020-2025) \& Gender (User)}
+    \label{userexplore23}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/user_explore_2_4.png}
+    \caption{Industry Number in One's Application History \& Birth Year (User)}
+    \label{userexplore24}
+\end{figure}
+
+
+\begin{figure}[htbp]
+    \centering
+    % 第一个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_2_5.png}
+    \end{subfigure}
+    \hfill
+    % 第二个子图
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/user_explore_2_6.png}
+    \end{subfigure}
+    
+    \caption{Wage Expectation Gap \& Application Order (User) }
+    \label{userexplore25}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\onehalfspacing
+\setlength\bibsep{0pt}
+\bibliography{ref}
+
+\end{document}

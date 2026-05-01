@@ -1,0 +1,10 @@
+*
+!*/
+!.gitignore
+!*.do
+!*.ado
+!*.py
+!*.ipynb
+!*.txt
+!*.md
+!*.tex

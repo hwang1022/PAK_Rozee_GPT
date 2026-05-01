@@ -1,0 +1,18 @@
+\begin{table}[h]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Impact of ChatGPT on wages (GPT-4 rating, 20-year) \label{tab:did_wages_20yr_gpt}}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+                    &\multicolumn{1}{c}{$\alpha$}&\multicolumn{1}{c}{$\beta$}&\multicolumn{1}{c}{$\gamma$}\\
+\hline
+Post-2022 x AI Exposure (GPT)&       0.217***&       0.060   &      -0.028   \\
+                    &     (0.044)   &     (0.040)   &     (0.027)   \\
+Constant            &      10.439***&      10.440***&      10.445***\\
+                    &     (0.003)   &     (0.003)   &     (0.003)   \\
+\hline
+N                   &      35,019   &      35,019   &      35,019   \\
+\hline\hline
+\multicolumn{4}{p{0.7\linewidth}}{\footnotesize * p < 0.1; ** p < 0.05; *** p < 0.01. Standard errors in parentheses. Dependent variable is log of wages by occupation. Occupation and month fixed effects.}\\
+\end{tabular}
+\end{table}

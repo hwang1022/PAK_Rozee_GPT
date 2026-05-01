@@ -1,0 +1,18 @@
+\begin{table}[h]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Impact of ChatGPT on job counts (GPT-4 rating, 20-year) \label{tab:did_postings_20yr_gpt}}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+                    &\multicolumn{1}{c}{$\alpha$}&\multicolumn{1}{c}{$\beta$}&\multicolumn{1}{c}{$\gamma$}\\
+\hline
+Post-2022 x AI Exposure (GPT)&      -0.013   &       0.205***&       0.187***\\
+                    &     (0.052)   &     (0.047)   &     (0.032)   \\
+Constant            &       1.542***&       1.532***&       1.528***\\
+                    &     (0.003)   &     (0.004)   &     (0.004)   \\
+\hline
+N                   &      39,654   &      39,654   &      39,654   \\
+\hline\hline
+\multicolumn{4}{p{0.7\linewidth}}{\footnotesize * p < 0.1; ** p < 0.05; *** p < 0.01. Standard errors in parentheses. Dependent variable is log of monthly job postings by occupation. Occupation and month fixed effects.}\\
+\end{tabular}
+\end{table}
