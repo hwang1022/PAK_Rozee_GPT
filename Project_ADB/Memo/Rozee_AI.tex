@@ -1,0 +1,245 @@
+\documentclass[12pt]{article}
+
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+\newcommand{\tables}{../Output/Tables}
+\newcommand{\figures}{../Output/Figures}
+
+% Restore captions from Memo/Rozee_AI.pdf while still using the table source files.
+\newcommand{\inputtablewithcaption}[2]{%
+  \begingroup
+  \let\savedcaption\caption
+  \renewcommand{\caption}[1]{\savedcaption{#1}}%
+  \input{#2}%
+  \endgroup
+}
+
+\title{Rozee: AI \& Pakistan Labor Market}
+\author{Yifei Wu, Converted to Latex by HW}
+\date{Feb 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+
+\section{Introduction}
+
+This project utilizes data from Rozee, Pakistan's leading recruitment platform, to
+investigate the impact of AI on the labor market. The dataset provides
+comprehensive coverage, encompassing detailed information on users, companies, job
+postings, and job applications.
+
+At this stage, we have constructed the AI exposure index at the job-posting level,
+encompassing around 300k postings from 2020 through April 2025; for details on
+the methodology, please refer to \href{https://www.dropbox.com/scl/fi/uqi6zjdkaz9e7wlg5p04j/AI-Pakistan-LM-Presentation.pptx?rlkey=2xudrhus8cz26kf3xi7oix7fp&e=2&st=mdsvydvb&dl=0}{here}. Building on this, we will proceed with a
+series of descriptive statistics and empirical analyses.
+
+\section{Descriptives}
+
+\subsection*{AI Exposure}
+
+Please see Table \ref{tab:exposure_categories}, \ref{tab:job_level_exposure},
+\ref{tab:ai_exposure_by_sector}; Figure \ref{fig:ai_exposure_cdf},
+\ref{fig:ai_exposure_characteristics}, \ref{fig:ai_exposure_tasks}.
+
+\begin{table}[h]
+\centering
+\caption{Exposure Categories for Each Task}
+\label{tab:exposure_categories}
+\begin{tabular}{lll}
+\toprule
+Category & Rubric & Explanation \\
+\midrule
+E0 & No Exposure & Minimal reduction in time or decreases quality \\
+E1 & Direct Exposure & Access to LLM alone or simple interface decreases time \\
+   &                 & to complete task by 50\% \\
+E2 & LLM + Exposed  & Additional software needed on top of LLM \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Job-Level Exposure Measures}
+\label{tab:job_level_exposure}
+\begin{tabular}{ll}
+\toprule
+Variable & Definition \\
+\midrule
+$\alpha$ & Share of job's tasks labelled E1 \\
+$\beta$  & Share of job's tasks labelled E1 + 0.5$\times$ Share of job's tasks labelled E2 \\
+$\gamma$ & Share of job's tasks labelled E1 + Share of job's tasks labelled E2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Analysis}
+
+Using job-level AI exposure data, we investigate the broad effects of AI on the
+labor market. Now we consider the full-scale rollout of ChatGPT in November 2022
+as a key exogenous shock for our analysis.
+
+\begin{figure}[p]
+\centering
+\caption{AI-exposed tasks in Job Postings ($\beta$)}
+\label{fig:ai_exposure_cdf}
+\includegraphics[width=0.85\textwidth]{\figures/ai_exposure_cdf.png}
+\end{figure}
+
+\begin{table}[p]
+\centering
+\caption{AI exposure by ISIC sector ($\beta$)}
+\label{tab:ai_exposure_by_sector}
+\small
+% Source: \tables/ai_exposure_by_sector.xlsx
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+ISIC Sector & \begin{tabular}{c}Mean\\(Human)\end{tabular} &
+\begin{tabular}{c}SD\\(Human)\end{tabular} &
+\begin{tabular}{c}Mean\\(GPT)\end{tabular} &
+\begin{tabular}{c}SD\\(GPT)\end{tabular} & N \\
+\midrule
+Accommodation and food service activities & 0.50 & 0.21 & 0.52 & 0.21 & 5,082 \\
+Administrative and support service activities & 0.54 & 0.17 & 0.61 & 0.18 & 60,359 \\
+Agriculture, forestry and fishing & 0.48 & 0.19 & 0.55 & 0.19 & 841 \\
+Arts, entertainment and recreation & 0.51 & 0.19 & 0.56 & 0.20 & 2,477 \\
+Construction & 0.47 & 0.17 & 0.53 & 0.17 & 4,387 \\
+Education & 0.51 & 0.17 & 0.54 & 0.19 & 15,694 \\
+Electricity, gas, steam and air conditioning supply & 0.46 & 0.21 & 0.51 & 0.19 & 1,304 \\
+Financial and insurance activities & 0.54 & 0.14 & 0.59 & 0.13 & 13,461 \\
+Human health and social work activities & 0.46 & 0.18 & 0.51 & 0.17 & 24,586 \\
+Information and communication & 0.57 & 0.14 & 0.72 & 0.19 & 93,994 \\
+Manufacturing & 0.47 & 0.18 & 0.54 & 0.18 & 40,615 \\
+Mining and quarrying & 0.48 & 0.16 & 0.54 & 0.17 & 1,125 \\
+Other service activities & 0.46 & 0.22 & 0.50 & 0.21 & 561 \\
+Professional, scientific and technical activities & 0.54 & 0.17 & 0.60 & 0.18 & 32,953 \\
+Public administration and defence & 0.50 & 0.18 & 0.56 & 0.20 & 560 \\
+Real estate activities & 0.50 & 0.17 & 0.56 & 0.15 & 13,419 \\
+Transportation and storage & 0.49 & 0.17 & 0.58 & 0.17 & 4,683 \\
+Wholesale and retail trade & 0.52 & 0.17 & 0.58 & 0.17 & 11,718 \\
+\midrule
+\textbf{Total (Job Postings)} & \textbf{0.53} & \textbf{0.17} & \textbf{0.61} & \textbf{0.19} & \textbf{327,819} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Labor Demand}
+
+Here we focus on the impact of AI on the demand side of the labor market.
+Specifically, we look at changes in how job postings are designed and how
+companies manage their posting behaviors.
+
+\subsection*{Job Counts and Wages}
+
+We aim to investigate whether job posting volumes and wages exhibit significant
+trends following the AI shock. Building on existing methodologies, we aggregate
+individual job postings into different O*NET occupation levels. This allows us
+to construct an occupation-level AI exposure index, along with the total count of
+job postings and average wages at the occupation-month level. Following
+Teutloff et al. (2025), we then estimate the following continuous DiD regression:
+
+\[
+Y_{it}=\beta_0+\beta_1(LLM\_Exposure_i \times Post_t)+\gamma_i+\theta_t+\varepsilon_{it}
+\]
+
+As shown in Tables \ref{tab:did_postings_gpt}, \ref{tab:did_postings_human},
+\ref{tab:did_wages_gpt}, \ref{tab:did_wages_human}, occupations with high AI
+exposure experienced a contraction in job posting volumes and lower wages
+following the shock compared to low-exposure occupations. The event study in
+Figure \ref{fig:es_postings} and Figure \ref{fig:es_wages} further confirms the
+parallel trends assumption and validates our primary findings.
+
+\begin{figure}[p]
+\centering
+\caption{AI exposure by Job Salary/Education/Experience ($\beta$)}
+\label{fig:ai_exposure_characteristics}
+\includegraphics[width=0.55\textwidth]{\figures/ai_exposure_salary.png}
+
+\vspace{0.5em}
+{\large Job Posting Salary}
+
+\vspace{1.5em}
+\begin{minipage}{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{\figures/ai_exposure_education.png}
+\vspace{0.5em}
+
+{\large Education Requirement}
+\end{minipage}\hfill
+\begin{minipage}{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{\figures/ai_exposure_experience.png}
+\vspace{0.5em}
+
+{\large Experience Requirement}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\caption{AI exposure measure \& Number of tasks extracted ($\beta$)}
+\label{fig:ai_exposure_tasks}
+\begin{minipage}{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{\figures/ai_exposure_num_tasks_gpt.png}
+\end{minipage}\hfill
+\begin{minipage}{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{\figures/ai_exposure_num_tasks.png}
+\end{minipage}
+\end{figure}
+
+\inputtablewithcaption{Impact of public-use ChatGPT on job counts (GPT rating)\label{tab:did_postings_gpt}}{\tables/did_postings_gpt.tex}
+
+\inputtablewithcaption{Impact of public-use ChatGPT on job counts (Human rating)\label{tab:did_postings_human}}{\tables/did_postings_human.tex}
+
+\begin{figure}[p]
+\centering
+\caption{Event study of AI exposure on Job Counts (Human rating)}
+\label{fig:es_postings}
+\includegraphics[width=0.75\textwidth]{\figures/es_postings.png}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\caption{Event study of AI exposure on Wages (Human rating)}
+\label{fig:es_wages}
+\includegraphics[width=0.75\textwidth]{\figures/es_wages.png}
+\end{figure}
+
+\inputtablewithcaption{Impact of public-use ChatGPT on wages (GPT rating)\label{tab:did_wages_gpt}}{\tables/did_wages_gpt.tex}
+
+\inputtablewithcaption{Impact of public-use ChatGPT on wages (Human rating)\label{tab:did_wages_human}}{\tables/did_wages_human.tex}
+
+\begin{thebibliography}{9}
+
+\bibitem{teutloff2025}
+Teutloff, O., Einsiedler, J., K\"assi, O., Braesemann, F., Mishkin, P., and
+del Rio-Chanona, R. M. (2025). Winners and losers of generative ai: Early
+evidence of shifts in freelancer demand. \emph{Journal of Economic Behavior \&
+Organization}, page 106845.
+
+\end{thebibliography}
+
+\end{document}
